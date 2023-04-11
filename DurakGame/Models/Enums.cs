@@ -6,7 +6,24 @@ using System.Threading.Tasks;
 
 namespace DurakGame.Models
 {
-    internal class Enums
+    public enum Suit
     {
+        Spades,
+        Hearts,
+        Diamonds,
+        Clubs
+    }
+
+    public enum Rank
+    {
+        Six = 6,
+        Seven,
+        Eight,
+        Nine,
+        Ten,
+        Jack,
+        Queen,
+        King,
+        Ace
     }
 }
