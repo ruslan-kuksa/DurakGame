@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DurakGame"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="TheFoolGame" Height="700" Width="1400">
     <Grid>
-
+        
     </Grid>
 </Window>
