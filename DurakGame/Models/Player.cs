@@ -16,7 +16,5 @@ namespace DurakGame.Models
             Name = name;
             Hand = new List<Card>();
         }
-
-
     }
 }
