@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace DurakGame.Models
 {
-    internal class HumanPlayer
+    public class HumanPlayer : Player
     {
+
     }
 }
