@@ -31,7 +31,7 @@ namespace DurakGame.Models
                 cards[j] = temp;
             }
         }
-        public Card Deal()
+        public Card Deal(int v)
         {
             if (cards.Count == 0)
             {
