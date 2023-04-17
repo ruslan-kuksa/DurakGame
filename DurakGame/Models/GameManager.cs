@@ -7,7 +7,7 @@ using System.Windows.Documents;
 
 namespace DurakGame.Models
 {
-    public class TheFoolGame
+    public class GameManager
     {
         
     }
