@@ -8,7 +8,7 @@ namespace DurakGame.Models
 {
     public class Deck
     {
-        private List<Card> cards;
+        private List<Card> cards { get; set; }
         public Deck()
         {
             cards = new List<Card>();
@@ -19,6 +19,7 @@ namespace DurakGame.Models
                     cards.Add(new Card (suit, rank ));
                 }
             }
+            Shuffle();
         }
         public void Shuffle()
         {
@@ -31,12 +32,10 @@ namespace DurakGame.Models
                 cards[j] = temp;
             }
         }
-        public Card Deal()
+        public Card DrawCard()
         {
-            if (cards.Count == 0)
-            {
-                throw new InvalidOperationException("Deck is empty");
-            }
+            if (cards.Count == 0) 
+                return null;
             Card card = cards[0];
             cards.RemoveAt(0);
             return card;
