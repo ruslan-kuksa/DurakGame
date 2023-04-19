@@ -1,4 +1,5 @@
 ﻿using DurakGame.Models;
+using DurakGame.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,11 +32,11 @@ namespace DurakGame
 
         private void StartGameButton_Click(object sender, RoutedEventArgs e)
         {
-            // Добавить игроков и раздать карты
             Game.AddPlayer("Player 1");
             Game.DealCards();
 
             DisplayPlayerHand(Game.Players[0]);
+            ((Button)sender).IsEnabled = false;
         }
         private void DisplayPlayerHand(Player player)
         {
@@ -43,15 +44,14 @@ namespace DurakGame
 
             foreach (Card card in player.Hand)
             {
-                Button cardButton = new Button
+                CardControl cardControl = new CardControl 
                 {
-                    Content = $"{card.Rank} of {card.Suit}",
-                    Width = 100,
-                    Height = 150,
-                    Margin = new Thickness(5)
+                    Card = card,
+                    Width = 125,
+                    Height = 182,
+                    Margin = new Thickness(5) 
                 };
-
-                PlayerHandPanel.Children.Add(cardButton);
+                PlayerHandPanel.Children.Add(cardControl);
             }
         }
     }
