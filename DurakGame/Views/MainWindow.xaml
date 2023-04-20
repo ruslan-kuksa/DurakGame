@@ -5,17 +5,27 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DurakGame"
         mc:Ignorable="d"
-        Title="TheFoolGame" Height="700" Width="1400">
+        Title="TheFoolGame" Height="900" Width="1400" Background="#FF078A39">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-
+        <Button Grid.Row="1" Content="Начать игру" Width="200" Height="50" Click="StartGameButton_Click"/>
         <StackPanel Grid.Row="0" x:Name="PlayerHandPanel" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom">
-                
+
         </StackPanel>
 
-        <Button Grid.Row="1" Content="Начать игру" Width="200" Height="50" Click="StartGameButton_Click"/>
+        <Image x:Name="TrumpCardImage" Source="/Resources/card_back.png" Width="125" Height="182" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="104,0,0,0" RenderTransformOrigin="0.5,0.5" >
+            <Image.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="90"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Image.RenderTransform>
+        </Image>
+        <Image x:Name="DeckImage" Source="/Resources/card_back.png" Width="138" Height="198" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" RenderTransformOrigin="0.569,1" />
     </Grid>
 </Window>

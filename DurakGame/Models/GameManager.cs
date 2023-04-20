@@ -12,6 +12,7 @@ namespace DurakGame.Models
     {
         public List<Player> Players { get; private set; }
         public Deck Deck { get; private set; }
+        public Card TrumpCard { get; private set; }
 
         public GameManager()
         {
@@ -32,6 +33,7 @@ namespace DurakGame.Models
                     player.AddCardToHand(Deck.DrawCard());
                 }
             }
+            TrumpCard = Deck.DrawCard();
         }
     }
 }

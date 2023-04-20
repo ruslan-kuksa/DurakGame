@@ -23,6 +23,7 @@ namespace DurakGame
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Card _selectedCard;
         private GameManager Game;
         public MainWindow()
         {
@@ -34,7 +35,7 @@ namespace DurakGame
         {
             Game.AddPlayer("Player 1");
             Game.DealCards();
-
+            UpdateTrumpCardImage();
             DisplayPlayerHand(Game.Players[0]);
             ((Button)sender).IsEnabled = false;
         }
@@ -44,15 +45,33 @@ namespace DurakGame
 
             foreach (Card card in player.Hand)
             {
-                CardControl cardControl = new CardControl 
+                CardControl cardControl = new CardControl
                 {
                     Card = card,
                     Width = 125,
                     Height = 182,
-                    Margin = new Thickness(5) 
+                    Margin = new Thickness(2)
                 };
                 PlayerHandPanel.Children.Add(cardControl);
             }
         }
+        private void UpdateTrumpCardImage()
+        {
+            Suit trumpSuit = Game.TrumpCard.Suit;
+            string suitString = trumpSuit.ToString().ToLower();
+            string rankString = Game.TrumpCard.Rank.ToString().ToLower();
+            string imagePath = $"pack://application:,,,/Resources/{rankString}_of_{suitString}.png";
+            TrumpCardImage.Source = new BitmapImage(new Uri(imagePath, UriKind.Absolute));
+
+        }
+        /*private void CardButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button cardButton = sender as Button;
+            _selectedCard = cardButton.Tag as Card;
+        }
+        private Card GetSelectedCardFromUI()
+        {
+            return _selectedCard;
+        }*/
     }
 }

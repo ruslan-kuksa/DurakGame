@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Images\**" />
+    <EmbeddedResource Remove="Images\**" />
+    <None Remove="Images\**" />
+    <Page Remove="Images\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Resources\6_of_spades.png" />
     <None Remove="Resources\ace_of_clubs.png" />
     <None Remove="Resources\ace_of_diamonds.png" />
@@ -38,6 +45,7 @@
     <None Remove="Resources\seven_of_diamonds.png" />
     <None Remove="Resources\seven_of_hearts.png" />
     <None Remove="Resources\seven_of_spades.png" />
+    <None Remove="Resources\six_of_clubs.png" />
     <None Remove="Resources\six_of_diamonds.png" />
     <None Remove="Resources\six_of_hearts.png" />
     <None Remove="Resources\six_of_spades.png" />
@@ -56,7 +64,8 @@
     <Resource Include="Resources\ten_of_diamonds.png" />
     <Resource Include="Resources\ten_of_hearts.png" />
     <Resource Include="Resources\ten_of_spades.png" />
-    <Resource Include="Resources\six_of_diamonds.png" />
+    <Resource Include="Resources\six_of_clubs.png" />
+	<Resource Include="Resources\six_of_diamonds.png" />
     <Resource Include="Resources\six_of_hearts.png" />
     <Resource Include="Resources\six_of_spades.png" />
     <Resource Include="Resources\seven_of_clubs.png" />
@@ -75,7 +84,7 @@
     <Resource Include="Resources\ace_of_diamonds.png" />
     <Resource Include="Resources\ace_of_hearts.png" />
     <Resource Include="Resources\ace_of_spades.png" />
-    <Resource Include="Resources\card_back.jpg" />
+    <Resource Include="Resources\card_back.png" />
     <Resource Include="Resources\jack_of_clubs.png" />
     <Resource Include="Resources\jack_of_diamonds.png" />
     <Resource Include="Resources\jack_of_hearts.png" />

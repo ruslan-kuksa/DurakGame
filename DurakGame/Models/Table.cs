@@ -8,26 +8,34 @@ namespace DurakGame.Models
 {
     public class Table
     {
-        private List<Card> cardsOnTable;
+        public List<Card> AttackCards { get; private set; }
+        public List<Card> DefenseCards { get; private set; }
 
         public Table()
         {
-            cardsOnTable = new List<Card>();
+            AttackCards = new List<Card>();
+            DefenseCards = new List<Card>();
         }
 
-        public void AddCardToTable(Card card)
+        public void AddAttackCard(Card card)
         {
-            cardsOnTable.Add(card);
+            AttackCards.Add(card);
         }
 
-        public void ClearTable()
+        public void AddDefenseCard(Card card)
         {
-            cardsOnTable.Clear();
+            DefenseCards.Add(card);
         }
 
-        public bool HasCardsOnTable()
+        public void Clear()
         {
-            return cardsOnTable.Count > 0;
+            AttackCards.Clear();
+            DefenseCards.Clear();
+        }
+
+        public bool IsEmpty()
+        {
+            return AttackCards.Count == 0 && DefenseCards.Count == 0;
         }
     }
 }
