@@ -40,5 +40,9 @@ namespace DurakGame.Models
             cards.RemoveAt(0);
             return card;
         }
+        public int Count
+        {
+            get { return cards.Count; }
+        }
     }
 }

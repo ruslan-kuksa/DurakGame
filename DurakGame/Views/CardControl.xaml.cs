@@ -21,6 +21,9 @@ namespace DurakGame.Views
     /// </summary>
     public partial class CardControl : UserControl
     {
+        public static readonly DependencyProperty CardImageProperty = DependencyProperty.Register(
+         "CardImage", typeof(ImageSource), typeof(CardControl), new PropertyMetadata(null));
+
         public static readonly DependencyProperty CardProperty = DependencyProperty.Register(
         "Card", typeof(Card), typeof(CardControl), new PropertyMetadata(null, OnCardChanged));
 

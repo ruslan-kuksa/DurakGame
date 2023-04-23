@@ -10,9 +10,15 @@
     <Compile Update="Views\CardControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\EnemyCardControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\CardControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\EnemyCardControl.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\MainWindow.xaml">

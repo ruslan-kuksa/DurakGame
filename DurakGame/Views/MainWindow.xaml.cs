@@ -2,6 +2,7 @@
 using DurakGame.Views;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,14 +34,21 @@ namespace DurakGame
         private void StartGameButton_Click(object sender, RoutedEventArgs e)
         {
             Game.AddPlayer("Player 1");
+            Game.AddPlayer("Bot");
             Game.DealCards();
             UpdateTrumpCardImage();
-            DisplayPlayerHand(Game.Players[0]);
+            DisplayPlayerHand(Game.Players[0], Game.Players[1]);
+            UpdateDeckCardCount();
             ((Button)sender).IsEnabled = false;
         }
-        private void DisplayPlayerHand(Player player)
+        private void UpdateDeckCardCount()
+        {
+            DeckCounter.Text = Game.Deck.Count.ToString();
+        }
+        private void DisplayPlayerHand(Player player, Player opponent)
         {
             PlayerHandPanel.Children.Clear();
+            OpponentHandPanel.Children.Clear();
 
             foreach (Card card in player.Hand)
             {
@@ -51,9 +59,19 @@ namespace DurakGame
                     Height = 182,
                     Margin = new Thickness(2)
                 };
-
                 cardControl.MouseLeftButtonDown += CardControl_MouseLeftButtonDown;
                 PlayerHandPanel.Children.Add(cardControl);
+            }
+            foreach (Card card in opponent.Hand)
+            {
+                EnemyCardControl enemyCardControl = new EnemyCardControl
+                {
+                    Card = card,
+                    Width = 125,
+                    Height = 182,
+                    Margin = new Thickness(2)
+                };
+                OpponentHandPanel.Children.Add(enemyCardControl);
             }
         }
         private void CardControl_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -64,7 +82,7 @@ namespace DurakGame
                 Game.Players[0].RemoveCardFromHand(card);
                 Game.Table.AddAttackCard(card);
                 AddCardToTable(card);
-                DisplayPlayerHand(Game.Players[0]);
+                DisplayPlayerHand(Game.Players[0], Game.Players[1]);
             }
         }
         private void AddCardToTable(Card card)
@@ -99,15 +117,15 @@ namespace DurakGame
                 var card = cardControl.Card;
                 if (card != null && Game.Table.AttackCards.Count < 6)
                 { 
-                    ThrowCard(card, Game.Players[0]);
+                    ThrowCard(card, Game.Players[0], Game.Players[1]);
                 }
             }
         }
-        private void ThrowCard(Card card, Player player)
+        private void ThrowCard(Card card, Player player, Player opponent)
         {
             Game.Table.AddAttackCard(card);
             player.Hand.Remove(card);
-            DisplayPlayerHand(player);
+            DisplayPlayerHand(player, opponent);
             DisplayTable();
         }
         private void DisplayTable()
