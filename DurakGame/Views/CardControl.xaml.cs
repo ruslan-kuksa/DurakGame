@@ -24,6 +24,14 @@ namespace DurakGame.Views
         public static readonly DependencyProperty CardProperty = DependencyProperty.Register(
         "Card", typeof(Card), typeof(CardControl), new PropertyMetadata(null, OnCardChanged));
 
+        public static readonly RoutedEvent CardClickedEvent = EventManager.RegisterRoutedEvent(
+        "CardClicked", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(CardControl));
+
+        public event RoutedEventHandler CardClicked
+        {
+            add { AddHandler(CardClickedEvent, value); }
+            remove { RemoveHandler(CardClickedEvent, value); }
+        }
         public Card Card
         {
             get { return (Card)GetValue(CardProperty); }
@@ -40,6 +48,18 @@ namespace DurakGame.Views
             string imagePath = $"/Resources/{card.Rank.ToString().ToLowerInvariant()}_of_{card.Suit.ToString().ToLowerInvariant()}.png";
             BitmapImage bitmapImage = new BitmapImage(new Uri(imagePath, UriKind.Relative));
             cardControl.CardImage.Source = bitmapImage;
+        }
+        private void RaiseCardClickedEvent()
+        {
+            RoutedEventArgs args = new RoutedEventArgs(CardClickedEvent);
+            RaiseEvent(args);
+        }
+        private void CardControl_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                RaiseCardClickedEvent();
+            }
         }
     }
 }

@@ -13,11 +13,13 @@ namespace DurakGame.Models
         public List<Player> Players { get; private set; }
         public Deck Deck { get; private set; }
         public Card TrumpCard { get; private set; }
+        public Table Table { get; private set; }
 
         public GameManager()
         {
             Players = new List<Player>();
             Deck = new Deck();
+            Table = new Table();
         }
 
         public void AddPlayer(string playerName)

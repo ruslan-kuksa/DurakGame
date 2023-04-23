@@ -23,7 +23,6 @@ namespace DurakGame
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Card _selectedCard;
         private GameManager Game;
         public MainWindow()
         {
@@ -52,8 +51,36 @@ namespace DurakGame
                     Height = 182,
                     Margin = new Thickness(2)
                 };
+
+                cardControl.MouseLeftButtonDown += CardControl_MouseLeftButtonDown;
                 PlayerHandPanel.Children.Add(cardControl);
             }
+        }
+        private void CardControl_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is CardControl cardControl)
+            {
+                Card card = cardControl.Card;
+                Game.Players[0].RemoveCardFromHand(card);
+                Game.Table.AddAttackCard(card);
+                AddCardToTable(card);
+                DisplayPlayerHand(Game.Players[0]);
+            }
+        }
+        private void AddCardToTable(Card card)
+        {
+            CardControl cardControl = new CardControl
+            {
+                Card = card,
+                Width = 125,
+                Height = 182,
+                Margin = new Thickness(2)
+            };
+
+            Canvas.SetLeft(cardControl, 50 * Game.Table.AttackCards.Count - 350);
+            Canvas.SetTop(cardControl, 0);
+
+            TablePanel.Children.Add(cardControl);
         }
         private void UpdateTrumpCardImage()
         {
@@ -64,14 +91,44 @@ namespace DurakGame
             TrumpCardImage.Source = new BitmapImage(new Uri(imagePath, UriKind.Absolute));
 
         }
-        /*private void CardButton_Click(object sender, RoutedEventArgs e)
+        private void CardControl_CardClicked(object sender, RoutedEventArgs e)
         {
-            Button cardButton = sender as Button;
-            _selectedCard = cardButton.Tag as Card;
+            CardControl? cardControl = sender as CardControl;
+            if (cardControl != null)
+            {
+                var card = cardControl.Card;
+                if (card != null && Game.Table.AttackCards.Count < 6)
+                { 
+                    ThrowCard(card, Game.Players[0]);
+                }
+            }
         }
-        private Card GetSelectedCardFromUI()
+        private void ThrowCard(Card card, Player player)
         {
-            return _selectedCard;
-        }*/
+            Game.Table.AddAttackCard(card);
+            player.Hand.Remove(card);
+            DisplayPlayerHand(player);
+            DisplayTable();
+        }
+        private void DisplayTable()
+        {
+            TablePanel.Children.Clear();
+            double cardWidth = 125;
+            double cardHeight = 182;
+            double xOffset = cardWidth;
+            for (int i = 0; i < Game.Table.AttackCards.Count; i++)
+            {
+                Card attackCard = Game.Table.AttackCards[i];
+                CardControl attackCardControl = new CardControl
+                {
+                    Card = attackCard,
+                    Width = cardWidth,
+                    Height = cardHeight
+                };
+                Canvas.SetLeft(attackCardControl, i * xOffset);
+                Canvas.SetTop(attackCardControl, 0);
+                TablePanel.Children.Add(attackCardControl);
+            }
+        }
     }
 }
