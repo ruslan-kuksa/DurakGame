@@ -11,6 +11,7 @@ namespace DurakGame.Models
     public class GameManager
     {
         public List<Player> Players { get; private set; }
+        public Player ActivePlayer { get; private set; }
         public Deck Deck { get; private set; }
         public Card TrumpCard { get; private set; }
         public Table Table { get; private set; }
@@ -36,6 +37,37 @@ namespace DurakGame.Models
                 }
             }
             TrumpCard = Deck.DrawCard();
+            ActivePlayer = FindLowestTrumpCard();
+        }
+        public Player FindLowestTrumpCard()
+        {
+            Player startingPlayer = null;
+            int lowestTrumpValue = int.MaxValue;
+
+            foreach (Player player in Players)
+            {
+                foreach (Card card in player.Hand)
+                {
+                    int cardRankValue = Convert.ToInt32(card.Rank);
+                    if (card.Suit == TrumpCard.Suit && cardRankValue < lowestTrumpValue)
+                    {
+                        startingPlayer = player;
+                        lowestTrumpValue = cardRankValue;
+                    }
+                }
+            }
+
+            return startingPlayer;
+        }
+        private void SwitchActivePlayer()
+        {
+            int activePlayerIndex = Players.IndexOf(ActivePlayer);
+            int nextPlayerIndex = (activePlayerIndex + 1) % Players.Count;
+            ActivePlayer = Players[nextPlayerIndex];
+        }
+        public void NextTurn()
+        {
+            SwitchActivePlayer();
         }
     }
 }

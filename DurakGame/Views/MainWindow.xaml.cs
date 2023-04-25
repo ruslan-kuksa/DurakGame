@@ -39,6 +39,15 @@ namespace DurakGame
             UpdateTrumpCardImage();
             DisplayPlayerHand(Game.Players[0], Game.Players[1]);
             UpdateDeckCardCount();
+            Player firstPlayer = DetermineFirstPlayer();
+            if (firstPlayer != null)
+            {
+                FirstPlayerLabel.Content = $"{firstPlayer.Name} ходить першим";
+            }
+            else
+            {
+                FirstPlayerLabel.Content = "Немає гравців з козирними картами";
+            }
             ((Button)sender).IsEnabled = false;
         }
         private void UpdateDeckCardCount()
@@ -147,6 +156,27 @@ namespace DurakGame
                 Canvas.SetTop(attackCardControl, 0);
                 TablePanel.Children.Add(attackCardControl);
             }
+        }
+        public Player DetermineFirstPlayer()
+        {
+            Player firstPlayer = null;
+            Card lowestTrumpCard = null;
+
+            foreach (Player player in Game.Players)
+            {
+                Card playerLowestTrumpCard = player.Hand.Where(card => card.Suit == Game.TrumpCard.Suit).OrderBy(card => card.Rank).FirstOrDefault();
+                if (playerLowestTrumpCard == null)
+                {
+                    continue;
+                }
+
+                if (lowestTrumpCard == null || playerLowestTrumpCard.Rank < lowestTrumpCard.Rank)
+                {
+                    lowestTrumpCard = playerLowestTrumpCard;
+                    firstPlayer = player;
+                }
+            }
+            return firstPlayer;
         }
     }
 }

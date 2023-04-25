@@ -35,24 +35,5 @@ namespace DurakGame.Models
         {
             return false;
         }
-        /*public abstract Card MakeMove(List<Card> tableCards);*/
-
-        protected bool IsValidAttackCard(Card card, List<Card> tableCards)
-        {
-            if (tableCards.Count == 0)
-            {
-                return true;
-            }
-            return tableCards.Any(tableCard => tableCard.Rank == card.Rank);
-        }
-
-        protected bool IsValidDefenseCard(Card card, List<Card> tableCards)
-        {
-            Card lastAttackCard = tableCards.Last();
-            bool isHigherRank = card.Rank > lastAttackCard.Rank;
-            bool isSameSuit = card.Suit == lastAttackCard.Suit;
-            bool isAce = card.Rank == Rank.Ace;
-            return (isHigherRank && isSameSuit) || (isAce && !tableCards.Any(tc => tc.Rank == Rank.Ace));
-        }
     }
 }
