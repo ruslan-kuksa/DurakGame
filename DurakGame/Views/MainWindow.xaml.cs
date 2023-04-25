@@ -43,7 +43,7 @@ namespace DurakGame
         }
         private void UpdateDeckCardCount()
         {
-            DeckCounter.Text = Game.Deck.Count.ToString();
+            DeckCounter.Content = Game.Deck.Count.ToString();
         }
         private void DisplayPlayerHand(Player player, Player opponent)
         {

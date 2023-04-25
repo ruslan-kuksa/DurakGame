@@ -7,6 +7,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <Image x:Name="CardBackImage" Source="pack://application:,,,/Resources/card_back.png" Stretch="Uniform" />
+        <Image x:Name="CardImageControl" Source="{Binding CardImage, RelativeSource={RelativeSource AncestorType=UserControl}}" MouseDown="EnemyCardControl_MouseDown" />
     </Grid>
 </UserControl>

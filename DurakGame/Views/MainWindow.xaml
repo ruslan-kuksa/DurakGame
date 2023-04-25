@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DurakGame"
         mc:Ignorable="d"
-        Title="TheFoolGame" Height="900" Width="1300" Background="#FF078A39">
+        Title="TheFoolGame" Height="1080" Width="1920" Background="#FF078A39">
     <Grid>
         
         <Grid.RowDefinitions>
@@ -31,6 +31,6 @@
         </Image>
         <Image x:Name="DeckImage" Source="/Resources/card_back.png" Width="138" Height="198" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" RenderTransformOrigin="0.569,1" />
         <Canvas x:Name="TablePanel" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Height="Auto" />
-        <TextBox x:Name="DeckCounter" Text="0" Margin="70,281,1204,532" FontSize="14" FontWeight="Bold"/>
+        <Label x:Name="DeckCounter" Content="0" Margin="70,358,79,340" FontSize="14" FontWeight="Bold" Foreground="White"/>
     </Grid>
 </Window>
