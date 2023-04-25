@@ -33,13 +33,13 @@ namespace DurakGame
 
         private void StartGameButton_Click(object sender, RoutedEventArgs e)
         {
-            Game.AddPlayer("Player 1");
+            Game.AddPlayer("Player");
             Game.AddPlayer("Bot");
             Game.DealCards();
             UpdateTrumpCardImage();
             DisplayPlayerHand(Game.Players[0], Game.Players[1]);
             UpdateDeckCardCount();
-            Player firstPlayer = DetermineFirstPlayer();
+            Player firstPlayer = Game.FindLowestTrumpCard();
             if (firstPlayer != null)
             {
                 FirstPlayerLabel.Content = $"{firstPlayer.Name} ходить першим";
@@ -156,27 +156,6 @@ namespace DurakGame
                 Canvas.SetTop(attackCardControl, 0);
                 TablePanel.Children.Add(attackCardControl);
             }
-        }
-        public Player DetermineFirstPlayer()
-        {
-            Player firstPlayer = null;
-            Card lowestTrumpCard = null;
-
-            foreach (Player player in Game.Players)
-            {
-                Card playerLowestTrumpCard = player.Hand.Where(card => card.Suit == Game.TrumpCard.Suit).OrderBy(card => card.Rank).FirstOrDefault();
-                if (playerLowestTrumpCard == null)
-                {
-                    continue;
-                }
-
-                if (lowestTrumpCard == null || playerLowestTrumpCard.Rank < lowestTrumpCard.Rank)
-                {
-                    lowestTrumpCard = playerLowestTrumpCard;
-                    firstPlayer = player;
-                }
-            }
-            return firstPlayer;
         }
     }
 }
