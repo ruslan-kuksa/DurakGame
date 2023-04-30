@@ -7,17 +7,21 @@
         mc:Ignorable="d"
         Title="TheFoolGame" Height="1080" Width="1920" Background="#FF078A39">
     <Grid>
-        
+
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Button Grid.Row="1" Content="Почати гру" Width="200" Height="50" Click="StartGameButton_Click"/>
+        <Button Grid.Row="1" Content="Почати гру" Width="200" Height="50" Click="StartGameButton_Click" Margin="860,5,860,5"/>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,150,0">
+            <Button x:Name="TakeButton" Content="Взяти" Width="200" Height="50" Click="TakeButton_Click" IsEnabled="False" Margin="0,0,40,0"/>
+            <Button x:Name="BeatButton" Content="Бито" Width="200" Height="50" Click="BeatButton_Click" IsEnabled="False"/>
+        </StackPanel>
         <StackPanel Grid.Row="0" x:Name="PlayerHandPanel" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom">
 
         </StackPanel>
         <StackPanel Grid.Row="0" x:Name="OpponentHandPanel" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
-            
+
         </StackPanel>
         <Image x:Name="TrumpCardImage" Source="/Resources/card_back.png" Width="125" Height="182" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="104,0,0,0" RenderTransformOrigin="0.5,0.5" >
             <Image.RenderTransform>

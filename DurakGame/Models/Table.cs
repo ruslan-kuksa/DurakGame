@@ -37,5 +37,10 @@ namespace DurakGame.Models
         {
             return AttackCards.Count == 0 && DefenseCards.Count == 0;
         }
+        public List<Card> GetAllCards()
+        {
+            return AttackCards.Concat(DefenseCards).ToList();
+        }
     }
 }
+

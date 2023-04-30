@@ -8,6 +8,7 @@ namespace DurakGame.Models
 {
     /*public class BotPlayer : Player
     {
-
+        
     }*/
 }
+

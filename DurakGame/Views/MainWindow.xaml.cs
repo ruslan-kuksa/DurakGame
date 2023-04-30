@@ -157,5 +157,14 @@ namespace DurakGame
                 TablePanel.Children.Add(attackCardControl);
             }
         }
+        private void TakeButton_Click(object sender, RoutedEventArgs e)
+        {
+            Player player = Game.Players[0];
+            List<Card> cardsOnTable = Game.Table.AttackCards.Concat(Game.Table.DefenseCards).ToList();
+            Game.TakeCards(player, cardsOnTable);
+            DisplayPlayerHand(Game.Players[0], Game.Players[1]);
+            DisplayTable();
+            UpdateDeckCardCount();
+        }
     }
 }

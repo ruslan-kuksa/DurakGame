@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace DurakGame.Models
 {
-    /*public class HumanPlayer : Player
+    public class HumanPlayer : Player
     {
         public HumanPlayer(string name) : base(name)
         {
 
         }
-    }*/
+    }
 }
