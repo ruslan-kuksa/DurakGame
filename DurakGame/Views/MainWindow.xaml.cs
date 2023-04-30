@@ -49,6 +49,7 @@ namespace DurakGame
                 FirstPlayerLabel.Content = "Немає гравців з козирними картами";
             }
             ((Button)sender).IsEnabled = false;
+            UpdateButtons();
         }
         private void UpdateDeckCardCount()
         {
@@ -165,6 +166,20 @@ namespace DurakGame
             DisplayPlayerHand(Game.Players[0], Game.Players[1]);
             DisplayTable();
             UpdateDeckCardCount();
+        }
+
+        private void BeatButton_Click(object sender, RoutedEventArgs e)
+        {
+            Game.EndTurn();
+            DisplayPlayerHand(Game.Players[0], Game.Players[1]);
+            DisplayTable();
+            UpdateDeckCardCount();
+        }
+        private void UpdateButtons()
+        {
+            bool isPlayerTurn = Game.ActivePlayer.Name == "Player";
+            BeatButton.IsEnabled = isPlayerTurn && Game.Table.AttackCards.Count > 0 && Game.Table.DefenseCards.Count > 0;
+            TakeButton.IsEnabled = isPlayerTurn && Game.Table.AttackCards.Count > 0;
         }
     }
 }

@@ -69,5 +69,22 @@ namespace DurakGame.Models
         {
             SwitchActivePlayer();
         }
+        public void EndTurn()
+        {
+            DiscardPile.AddRange(Table.GetAllCards());
+            Table.Clear();
+            DealCards();
+            SwitchActivePlayer();
+        }
+        public void TakeCards(Player player, List<Card> cardsOnTable)
+        {
+            foreach (Card card in cardsOnTable)
+            {
+                player.AddCardToHand(card);
+            }
+            Table.Clear();
+            DealCards();
+            SwitchActivePlayer();
+        }
     }
 }
