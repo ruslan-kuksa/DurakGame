@@ -123,8 +123,8 @@ namespace DurakGame
                 Margin = new Thickness(2)
             };
 
-            Canvas.SetLeft(cardControl, 50 * Game.Table.AttackCards.Count - 350);
-            Canvas.SetTop(cardControl, 0);
+            Canvas.SetLeft(cardControl, 135 * Game.Table.AttackCards.Count - 350);
+            Canvas.SetTop(cardControl, -50);
 
             TablePanel.Children.Add(cardControl);
         }
