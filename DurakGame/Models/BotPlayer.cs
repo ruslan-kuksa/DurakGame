@@ -6,9 +6,12 @@ using System.Threading.Tasks;
 
 namespace DurakGame.Models
 {
-    /*public class BotPlayer : Player
+    public class BotPlayer : Player
     {
-        
-    }*/
+        public BotPlayer(string name) : base(name)
+        {
+
+        }
+    }
 }
 

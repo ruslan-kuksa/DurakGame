@@ -12,6 +12,10 @@ namespace DurakGame.Models
         {
 
         }
+        public override bool IsHuman()
+        {
+            return true;
+        }
         public bool CanAttackWithCards(List<Card> cards)
         {
             if (cards.Count == 0)

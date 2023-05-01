@@ -41,6 +41,10 @@ namespace DurakGame.Models
         {
             return AttackCards.Concat(DefenseCards).ToList();
         }
+        public bool ContainsCardWithRank(Rank rank)
+        {
+            return AttackCards.Any(card => card.Rank == rank) || DefenseCards.Any(card => card.Rank == rank);
+        }
     }
 }
 

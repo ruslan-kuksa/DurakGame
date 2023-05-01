@@ -33,8 +33,8 @@ namespace DurakGame
 
         private void StartGameButton_Click(object sender, RoutedEventArgs e)
         {
-            Game.AddPlayer("Player");
-            Game.AddPlayer("Bot");
+            Game.AddPlayer(new HumanPlayer("Player"));
+            Game.AddPlayer(new BotPlayer("Bot"));
             Game.DealCards();
             UpdateTrumpCardImage();
             DisplayPlayerHand(Game.Players[0], Game.Players[1]);
@@ -89,14 +89,27 @@ namespace DurakGame
             if (sender is CardControl cardControl)
             {
                 Card card = cardControl.Card;
-                var player = Game.Players[0] as HumanPlayer;
 
-                if (Game.Table.IsEmpty() || player.GetAllCardsOfRank(card.Rank).Count > 0)
+                if (Game.Players.Count > 0 && Game.Players[0] is HumanPlayer player)
                 {
-                    player.RemoveCardFromHand(card);
-                    Game.Table.AddAttackCard(card);
-                    AddCardToTable(card);
-                    DisplayPlayerHand(player, Game.Players[1]);
+                    if (Game.Table.IsEmpty())
+                    {
+                        player.RemoveCardFromHand(card);
+                        Game.Table.AddAttackCard(card);
+                        AddCardToTable(card);
+                        DisplayPlayerHand(player, Game.Players[1]);
+                    }
+                    else if (Game.Table.ContainsCardWithRank(card.Rank))
+                    {
+                        player.RemoveCardFromHand(card);
+                        Game.Table.AddAttackCard(card);
+                        AddCardToTable(card);
+                        DisplayPlayerHand(player, Game.Players[1]);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Ви можете підкинути лише карту того ж значення, що і на столі.", "Помилка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                 }
             }
         }

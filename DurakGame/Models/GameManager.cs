@@ -24,9 +24,9 @@ namespace DurakGame.Models
             Table = new Table();
             DiscardPile = new List<Card>();
         }
-        public void AddPlayer(string playerName)
+        public void AddPlayer(Player player)
         {
-            Players.Add(new Player(playerName));
+            Players.Add(player);
         }
         public void DealCards()
         {
