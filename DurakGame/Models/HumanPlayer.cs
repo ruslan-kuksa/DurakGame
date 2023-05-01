@@ -12,5 +12,19 @@ namespace DurakGame.Models
         {
 
         }
+        public bool CanAttackWithCards(List<Card> cards)
+        {
+            if (cards.Count == 0)
+            {
+                return false;
+            }
+
+            Rank rank = cards[0].Rank;
+            return cards.All(card => card.Rank == rank);
+        }
+        public List<Card> GetAllCardsOfRank(Rank rank)
+        {
+            return Hand.Where(card => card.Rank == rank).ToList();
+        }
     }
 }

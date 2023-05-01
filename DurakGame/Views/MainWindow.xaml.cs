@@ -89,10 +89,15 @@ namespace DurakGame
             if (sender is CardControl cardControl)
             {
                 Card card = cardControl.Card;
-                Game.Players[0].RemoveCardFromHand(card);
-                Game.Table.AddAttackCard(card);
-                AddCardToTable(card);
-                DisplayPlayerHand(Game.Players[0], Game.Players[1]);
+                var player = Game.Players[0] as HumanPlayer;
+
+                if (Game.Table.IsEmpty() || player.GetAllCardsOfRank(card.Rank).Count > 0)
+                {
+                    player.RemoveCardFromHand(card);
+                    Game.Table.AddAttackCard(card);
+                    AddCardToTable(card);
+                    DisplayPlayerHand(player, Game.Players[1]);
+                }
             }
         }
         private void AddCardToTable(Card card)
@@ -133,10 +138,16 @@ namespace DurakGame
         }
         private void ThrowCard(Card card, Player player, Player opponent)
         {
-            Game.Table.AddAttackCard(card);
-            player.Hand.Remove(card);
-            DisplayPlayerHand(player, opponent);
-            DisplayTable();
+            var playerAsHuman = player as HumanPlayer;
+            bool canThrowCard = Game.Table.IsEmpty() || playerAsHuman.GetAllCardsOfRank(card.Rank).Count > 0;
+
+            if (canThrowCard)
+            {
+                Game.Table.AddAttackCard(card);
+                player.Hand.Remove(card);
+                DisplayPlayerHand(player, opponent);
+                DisplayTable();
+            }
         }
         private void DisplayTable()
         {
