@@ -98,6 +98,7 @@ namespace DurakGame
                         Game.Table.AddAttackCard(card);
                         AddCardToTable(card);
                         DisplayPlayerHand(player, Game.Players[1]);
+                        ErrorMessage.Text = "";
                     }
                     else if (Game.Table.ContainsCardWithRank(card.Rank))
                     {
@@ -105,10 +106,11 @@ namespace DurakGame
                         Game.Table.AddAttackCard(card);
                         AddCardToTable(card);
                         DisplayPlayerHand(player, Game.Players[1]);
+                        ErrorMessage.Text = "";
                     }
                     else
                     {
-                        MessageBox.Show("Ви можете підкинути лише карту того ж значення, що і на столі.", "Помилка", MessageBoxButton.OK, MessageBoxImage.Error);
+                        ErrorMessage.Text = "Ви можете підкинути лише карту того ж значення, що і на столі.";
                     }
                 }
             }

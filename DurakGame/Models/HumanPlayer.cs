@@ -22,7 +22,6 @@ namespace DurakGame.Models
             {
                 return false;
             }
-
             Rank rank = cards[0].Rank;
             return cards.All(card => card.Rank == rank);
         }

@@ -37,5 +37,6 @@
         <Canvas x:Name="TablePanel" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Height="Auto" />
         <Label x:Name="DeckCounter" Content="0" Margin="70,358,79,340" FontSize="14" FontWeight="Bold" Foreground="White"/>
         <Label x:Name="FirstPlayerLabel" Margin="20,20,1593,893" FontSize="16" FontWeight="Bold" Foreground="White"/>
+        <TextBlock x:Name="ErrorMessage" Foreground="Red" HorizontalAlignment="Left" Margin="0,649,0,268" Width="327" FontSize="14"/>
     </Grid>
 </Window>
