@@ -12,6 +12,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -86,7 +87,7 @@ namespace DurakGame
         }
         private void CardControl_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (sender is CardControl cardControl)
+            if (Game.ActivePlayer is HumanPlayer && sender is CardControl cardControl)
             {
                 Card card = cardControl.Card;
 
@@ -113,6 +114,10 @@ namespace DurakGame
                         ErrorMessage.Text = "Ви можете підкинути лише карту того ж значення, що і на столі.";
                     }
                 }
+            }
+            else
+            {
+                ErrorMessage.Text = "Зараз хід бота, зачекайте своєї черги.";
             }
         }
         private void AddCardToTable(Card card)
