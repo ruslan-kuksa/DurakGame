@@ -59,7 +59,7 @@ namespace DurakGame.Models
             }
             return startingPlayer;
         }
-        private void SwitchActivePlayer()
+        public void SwitchActivePlayer()
         {
             int activePlayerIndex = Players.IndexOf(ActivePlayer);
             int nextPlayerIndex = (activePlayerIndex + 1) % Players.Count;

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -38,7 +39,8 @@ namespace DurakGame
             Game.AddPlayer(new BotPlayer("Bot"));
             Game.DealCards();
             UpdateTrumpCardImage();
-            DisplayPlayerHand(Game.Players[0], Game.Players[1]);
+            DisplayPlayerHand(Game.Players[0]);
+            DisplayOpponentHand(Game.Players[1]);
             UpdateDeckCardCount();
             Player firstPlayer = Game.FindLowestTrumpCard();
             if (firstPlayer != null)
@@ -50,16 +52,32 @@ namespace DurakGame
                 FirstPlayerLabel.Content = "Немає гравців з козирними картами";
             }
             ((Button)sender).IsEnabled = false;
-            UpdateButtons();
         }
         private void UpdateDeckCardCount()
         {
             DeckCounter.Content = Game.Deck.Count.ToString();
         }
-        private void DisplayPlayerHand(Player player, Player opponent)
+        private void DisplayOpponentHand(Player opponent)
+        {
+            OpponentHandPanel.Children.Clear();
+
+            foreach (Card card in opponent.Hand)
+            {
+                EnemyCardControl enemyCardControl = new EnemyCardControl
+                {
+                    Card = card,
+                    Width = 125,
+                    Height = 182,
+                    Margin = new Thickness(2)
+                };
+
+                OpponentHandPanel.Children.Add(enemyCardControl);
+            }
+        }
+
+        private void DisplayPlayerHand(Player player)
         {
             PlayerHandPanel.Children.Clear();
-            OpponentHandPanel.Children.Clear();
 
             foreach (Card card in player.Hand)
             {
@@ -70,21 +88,12 @@ namespace DurakGame
                     Height = 182,
                     Margin = new Thickness(2)
                 };
+
                 cardControl.MouseLeftButtonDown += CardControl_MouseLeftButtonDown;
                 PlayerHandPanel.Children.Add(cardControl);
             }
-            foreach (Card card in opponent.Hand)
-            {
-                EnemyCardControl enemyCardControl = new EnemyCardControl
-                {
-                    Card = card,
-                    Width = 125,
-                    Height = 182,
-                    Margin = new Thickness(2)
-                };
-                OpponentHandPanel.Children.Add(enemyCardControl);
-            }
         }
+
         private void CardControl_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (Game.ActivePlayer is HumanPlayer && sender is CardControl cardControl)
@@ -97,16 +106,18 @@ namespace DurakGame
                     {
                         player.RemoveCardFromHand(card);
                         Game.Table.AddAttackCard(card);
-                        AddCardToTable(card);
-                        DisplayPlayerHand(player, Game.Players[1]);
+                        AddCardToTable(card, false);
+                        DisplayPlayerHand(player);
+                        DisplayOpponentHand(Game.Players[1]);
                         ErrorMessage.Text = "";
                     }
                     else if (Game.Table.ContainsCardWithRank(card.Rank))
                     {
                         player.RemoveCardFromHand(card);
                         Game.Table.AddAttackCard(card);
-                        AddCardToTable(card);
-                        DisplayPlayerHand(player, Game.Players[1]);
+                        AddCardToTable(card, false);
+                        DisplayPlayerHand(player);
+                        DisplayOpponentHand(Game.Players[1]);
                         ErrorMessage.Text = "";
                     }
                     else
@@ -119,8 +130,10 @@ namespace DurakGame
             {
                 ErrorMessage.Text = "Зараз хід бота, зачекайте своєї черги.";
             }
+            Game.NextTurn();
+            BotPlay();
         }
-        private void AddCardToTable(Card card)
+        private void AddCardToTable(Card card, bool isDefending)
         {
             CardControl cardControl = new CardControl
             {
@@ -130,8 +143,9 @@ namespace DurakGame
                 Margin = new Thickness(2)
             };
 
-            Canvas.SetLeft(cardControl, 135 * Game.Table.AttackCards.Count - 350);
-            Canvas.SetTop(cardControl, -50);
+            int position = isDefending ? Game.Table.DefenseCards.Count - 1 : Game.Table.AttackCards.Count - 1;
+            Canvas.SetLeft(cardControl, 135 * (position + 1) - 350);
+            Canvas.SetTop(cardControl, isDefending ? 0 : -50);
 
             TablePanel.Children.Add(cardControl);
         }
@@ -165,7 +179,8 @@ namespace DurakGame
             {
                 Game.Table.AddAttackCard(card);
                 player.Hand.Remove(card);
-                DisplayPlayerHand(player, opponent);
+                DisplayPlayerHand(player);
+                DisplayOpponentHand(opponent);
                 DisplayTable();
             }
         }
@@ -188,13 +203,27 @@ namespace DurakGame
                 Canvas.SetTop(attackCardControl, 0);
                 TablePanel.Children.Add(attackCardControl);
             }
+            for (int i = 0; i < Game.Table.DefenseCards.Count; i++)
+            {
+                Card defenseCard = Game.Table.DefenseCards[i];
+                CardControl defenseCardControl = new CardControl
+                {
+                    Card = defenseCard,
+                    Width = cardWidth,
+                    Height = cardHeight
+                };
+                Canvas.SetLeft(defenseCardControl, i * xOffset);
+                Canvas.SetTop(defenseCardControl, cardHeight / 2);
+                TablePanel.Children.Add(defenseCardControl);
+            }
         }
         private void TakeButton_Click(object sender, RoutedEventArgs e)
         {
             Player player = Game.Players[0];
             List<Card> cardsOnTable = Game.Table.AttackCards.Concat(Game.Table.DefenseCards).ToList();
             Game.TakeCards(player, cardsOnTable);
-            DisplayPlayerHand(Game.Players[0], Game.Players[1]);
+            DisplayPlayerHand(Game.Players[0]);
+            DisplayOpponentHand(Game.Players[1]);
             DisplayTable();
             UpdateDeckCardCount();
         }
@@ -202,15 +231,42 @@ namespace DurakGame
         private void BeatButton_Click(object sender, RoutedEventArgs e)
         {
             Game.EndTurn();
-            DisplayPlayerHand(Game.Players[0], Game.Players[1]);
+            DisplayPlayerHand(Game.Players[0]);
+            DisplayOpponentHand(Game.Players[1]);
             DisplayTable();
             UpdateDeckCardCount();
         }
-        private void UpdateButtons()
+        private void BotPlay()
         {
-            bool isPlayerTurn = Game.ActivePlayer.Name == "Player";
-            BeatButton.IsEnabled = isPlayerTurn && Game.Table.AttackCards.Count > 0 && Game.Table.DefenseCards.Count > 0;
-            TakeButton.IsEnabled = isPlayerTurn && Game.Table.AttackCards.Count > 0;
+            if (Game.ActivePlayer is BotPlayer bot)
+            {
+                BotAction action = bot.SelectCardToPlay(Game.Table, Game.TrumpCard);
+                Card cardToPlay = action.Card;
+
+                if (cardToPlay != null)
+                {
+                    bot.RemoveCardFromHand(cardToPlay);
+
+                    if (action.IsDefending)
+                    {
+                        Game.Table.AddDefenseCard(cardToPlay);
+                    }
+                    else
+                    {
+                        Game.Table.AddAttackCard(cardToPlay);
+                    }
+
+                    AddCardToTable(cardToPlay, action.IsDefending);
+                    DisplayPlayerHand(Game.Players[0]);
+                    DisplayOpponentHand(Game.Players[1]);
+                    Game.NextTurn();
+                }
+                else
+                {
+                    TakeButton_Click(null, null);
+                    Game.NextTurn();
+                }
+            }
         }
     }
 }

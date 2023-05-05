@@ -45,6 +45,15 @@ namespace DurakGame.Models
         {
             return AttackCards.Any(card => card.Rank == rank) || DefenseCards.Any(card => card.Rank == rank);
         }
+        public bool IsAttackingCard(Card card)
+        {
+            return AttackCards.Contains(card);
+        }
+
+        public bool IsDefendingCard(Card card)
+        {
+            return DefenseCards.Contains(card);
+        }
     }
 }
 
