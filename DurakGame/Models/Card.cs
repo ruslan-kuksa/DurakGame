@@ -15,5 +15,16 @@ namespace DurakGame.Models
             Suit = suit;
             Rank = rank;
         }
+        public bool CanBeat(Card other, Suit trumpSuit)
+        {
+            if (Suit == other.Suit)
+            {
+                return Rank > other.Rank;
+            }
+            else
+            {
+                return Suit == trumpSuit;
+            }
+        }
     }
 }

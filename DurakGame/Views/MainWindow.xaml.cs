@@ -46,6 +46,10 @@ namespace DurakGame
             if (firstPlayer != null)
             {
                 FirstPlayerLabel.Content = $"{firstPlayer.Name} ходить першим";
+                if (firstPlayer is BotPlayer)
+                {
+                    BotPlay();
+                }
             }
             else
             {
@@ -100,7 +104,7 @@ namespace DurakGame
             {
                 Card card = cardControl.Card;
 
-                if (Game.Players.Count > 0 && Game.Players[0] is HumanPlayer player)
+                if (Game.Players.Count > 0 && Game.Players[0] is HumanPlayer player && Game.Players[1] is BotPlayer bot)
                 {
                     if (Game.Table.IsEmpty())
                     {
@@ -108,7 +112,7 @@ namespace DurakGame
                         Game.Table.AddAttackCard(card);
                         AddCardToTable(card, false);
                         DisplayPlayerHand(player);
-                        DisplayOpponentHand(Game.Players[1]);
+                        DisplayOpponentHand(bot);
                         ErrorMessage.Text = "";
                     }
                     else if (Game.Table.ContainsCardWithRank(card.Rank))
@@ -117,12 +121,30 @@ namespace DurakGame
                         Game.Table.AddAttackCard(card);
                         AddCardToTable(card, false);
                         DisplayPlayerHand(player);
-                        DisplayOpponentHand(Game.Players[1]);
+                        DisplayOpponentHand(bot);
                         ErrorMessage.Text = "";
                     }
                     else
                     {
-                        ErrorMessage.Text = "Ви можете підкинути лише карту того ж значення, що і на столі.";
+                        Card lastAttackCard = Game.Table.AttackCards.LastOrDefault();
+                        if (lastAttackCard != null && card.CanBeat(lastAttackCard, Game.TrumpCard.Suit))
+                        {
+                            player.RemoveCardFromHand(card);
+                            Game.Table.AddDefenseCard(card);
+                            AddCardToTable(card, true);
+                            DisplayPlayerHand(player);
+                            DisplayOpponentHand(bot);
+                            ErrorMessage.Text = "";
+                        }
+                        else
+                        {
+                            ErrorMessage.Text = "Ця карта не може побити атакуючу карту.";
+                        }
+                    }
+                    if (string.IsNullOrEmpty(ErrorMessage.Text))
+                    {
+                        Game.NextTurn();
+                        BotPlay();
                     }
                 }
             }
@@ -133,6 +155,7 @@ namespace DurakGame
             Game.NextTurn();
             BotPlay();
         }
+
         private void AddCardToTable(Card card, bool isDefending)
         {
             CardControl cardControl = new CardControl
@@ -165,7 +188,7 @@ namespace DurakGame
             {
                 var card = cardControl.Card;
                 if (card != null && Game.Table.AttackCards.Count < 6)
-                { 
+                {
                     ThrowCard(card, Game.Players[0], Game.Players[1]);
                 }
             }

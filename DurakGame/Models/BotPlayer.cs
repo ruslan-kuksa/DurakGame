@@ -28,13 +28,19 @@ namespace DurakGame.Models
         {
             if (table.IsEmpty())
             {
-                return new BotAction(Hand.OrderBy(card => Convert.ToInt32(card.Rank)).FirstOrDefault(), false);
+                Card chosenCard = Hand.Where(card => card.Suit != trumpCard.Suit).OrderBy(card => Convert.ToInt32(card.Rank)).FirstOrDefault();
+                if (chosenCard == null)
+                {
+                    chosenCard = Hand.OrderBy(card => Convert.ToInt32(card.Rank)).FirstOrDefault();
+                }
+
+                return new BotAction(chosenCard, false);
             }
             else
             {
                 foreach (Card cardOnTable in table.AttackCards.Concat(table.DefenseCards))
                 {
-                    Card suitableCard = Hand.FirstOrDefault(card => card.Rank == cardOnTable.Rank || (card.Suit == trumpCard.Suit && card.Rank > cardOnTable.Rank));
+                    Card suitableCard = Hand.FirstOrDefault(card => card.CanBeat(cardOnTable, trumpCard.Suit));
                     if (suitableCard != null)
                     {
                         return new BotAction(suitableCard, table.IsAttackingCard(cardOnTable));
@@ -45,6 +51,7 @@ namespace DurakGame.Models
         }
     }
 }
+
 
 
 
