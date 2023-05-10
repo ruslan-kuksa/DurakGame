@@ -37,11 +37,15 @@ namespace DurakGame
         {
             Game.AddPlayer(new HumanPlayer("Player"));
             Game.AddPlayer(new BotPlayer("Bot"));
-            Game.DealCards();
+            Game.StartGame();
             UpdateTrumpCardImage();
             DisplayPlayerHand(Game.Players[0]);
             DisplayOpponentHand(Game.Players[1]);
             UpdateDeckCardCount();
+            if (Game.TrumpCard == null)
+            {
+                MessageBox.Show("TrumpCard ще не встановлено.");
+            }
             Player firstPlayer = Game.FindLowestTrumpCard();
             if (firstPlayer != null)
             {
@@ -106,23 +110,23 @@ namespace DurakGame
 
                 if (Game.Players.Count > 0 && Game.Players[0] is HumanPlayer player && Game.Players[1] is BotPlayer bot)
                 {
-                    if (Game.Table.IsEmpty())
+                    bool isAttacking = Game.Table.DefenseCards.Count == Game.Table.AttackCards.Count;
+
+                    if (isAttacking)
                     {
-                        player.RemoveCardFromHand(card);
-                        Game.Table.AddAttackCard(card);
-                        AddCardToTable(card, false);
-                        DisplayPlayerHand(player);
-                        DisplayOpponentHand(bot);
-                        ErrorMessage.Text = "";
-                    }
-                    else if (Game.Table.ContainsCardWithRank(card.Rank))
-                    {
-                        player.RemoveCardFromHand(card);
-                        Game.Table.AddAttackCard(card);
-                        AddCardToTable(card, false);
-                        DisplayPlayerHand(player);
-                        DisplayOpponentHand(bot);
-                        ErrorMessage.Text = "";
+                        if (Game.Table.CanAddAttackCard(card))
+                        {
+                            player.RemoveCardFromHand(card);
+                            Game.Table.AddAttackCard(card);
+                            AddCardToTable(card, false);
+                            DisplayPlayerHand(player);
+                            DisplayOpponentHand(bot);
+                            ErrorMessage.Text = "";
+                        }
+                        else
+                        {
+                            ErrorMessage.Text = "Ця карта не може бути підкинута.";
+                        }
                     }
                     else
                     {
@@ -141,6 +145,7 @@ namespace DurakGame
                             ErrorMessage.Text = "Ця карта не може побити атакуючу карту.";
                         }
                     }
+
                     if (string.IsNullOrEmpty(ErrorMessage.Text))
                     {
                         Game.NextTurn();
@@ -152,8 +157,6 @@ namespace DurakGame
             {
                 ErrorMessage.Text = "Зараз хід бота, зачекайте своєї черги.";
             }
-            Game.NextTurn();
-            BotPlay();
         }
 
         private void AddCardToTable(Card card, bool isDefending)
@@ -249,6 +252,7 @@ namespace DurakGame
             DisplayOpponentHand(Game.Players[1]);
             DisplayTable();
             UpdateDeckCardCount();
+            Game.DealCards();
         }
 
         private void BeatButton_Click(object sender, RoutedEventArgs e)
@@ -258,35 +262,46 @@ namespace DurakGame
             DisplayOpponentHand(Game.Players[1]);
             DisplayTable();
             UpdateDeckCardCount();
+            Game.DealCards();
         }
         private void BotPlay()
         {
             if (Game.ActivePlayer is BotPlayer bot)
             {
-                BotAction action = bot.SelectCardToPlay(Game.Table, Game.TrumpCard);
-                Card cardToPlay = action.Card;
+                BotAction? action = bot.SelectCardToPlay(Game.Table, Game.TrumpCard);
 
-                if (cardToPlay != null)
+                if (action.HasValue)
                 {
-                    bot.RemoveCardFromHand(cardToPlay);
+                    Card cardToPlay = action.Value.Card;
 
-                    if (action.IsDefending)
+                    if (cardToPlay != null)
                     {
-                        Game.Table.AddDefenseCard(cardToPlay);
+                        bot.RemoveCardFromHand(cardToPlay);
+
+                        if (action.Value.IsDefending)
+                        {
+                            Game.Table.AddDefenseCard(cardToPlay);
+                        }
+                        else
+                        {
+                            Game.Table.AddAttackCard(cardToPlay);
+                        }
+
+                        AddCardToTable(cardToPlay, action.Value.IsDefending);
+                        DisplayPlayerHand(Game.Players[0]);
+                        DisplayOpponentHand(Game.Players[1]);
                     }
                     else
                     {
-                        Game.Table.AddAttackCard(cardToPlay);
+                        List<Card> cardsOnTable = Game.Table.AttackCards.Concat(Game.Table.DefenseCards).ToList();
+                        Game.TakeCards(bot, cardsOnTable);
+                        DisplayPlayerHand(Game.Players[0]);
+                        DisplayOpponentHand(Game.Players[1]);
+                        DisplayTable();
+                        UpdateDeckCardCount();
+                        Game.DealCards();
                     }
 
-                    AddCardToTable(cardToPlay, action.IsDefending);
-                    DisplayPlayerHand(Game.Players[0]);
-                    DisplayOpponentHand(Game.Players[1]);
-                    Game.NextTurn();
-                }
-                else
-                {
-                    TakeButton_Click(null, null);
                     Game.NextTurn();
                 }
             }

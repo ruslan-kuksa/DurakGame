@@ -49,10 +49,18 @@ namespace DurakGame.Models
         {
             return AttackCards.Contains(card);
         }
-
         public bool IsDefendingCard(Card card)
         {
             return DefenseCards.Contains(card);
+        }
+        public bool CanAddAttackCard(Card card)
+        {
+            if (IsEmpty())
+            {
+                return true;
+            }
+
+            return ContainsCardWithRank(card.Rank);
         }
     }
 }

@@ -28,7 +28,7 @@ namespace DurakGame.Models
         {
             Players.Add(player);
         }
-        public void DealCards()
+        public void StartGame()
         {
             foreach (Player player in Players)
             {
@@ -37,8 +37,22 @@ namespace DurakGame.Models
                     player.AddCardToHand(Deck.DrawCard());
                 }
             }
-            TrumpCard = Deck.DrawCard();
+            if (Deck.Count > 0)
+            {
+                TrumpCard = Deck.DrawCard();
+            }
             ActivePlayer = FindLowestTrumpCard();
+        }
+
+        public void DealCards()
+        {
+            foreach (Player player in Players)
+            {
+                while (player.Hand.Count < 6 && Deck.Count > 0)
+                {
+                    player.AddCardToHand(Deck.DrawCard());
+                }
+            }
         }
         public Player FindLowestTrumpCard()
         {
@@ -57,7 +71,7 @@ namespace DurakGame.Models
                     }
                 }
             }
-            return startingPlayer;
+            return startingPlayer ?? Players[0];
         }
         public void SwitchActivePlayer()
         {
