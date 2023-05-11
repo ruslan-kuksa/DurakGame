@@ -301,7 +301,6 @@ namespace DurakGame
                         UpdateDeckCardCount();
                         Game.DealCards();
                     }
-
                     Game.NextTurn();
                 }
             }

@@ -16,23 +16,19 @@ namespace DurakGame.Models
             AttackCards = new List<Card>();
             DefenseCards = new List<Card>();
         }
-
         public void AddAttackCard(Card card)
         {
             AttackCards.Add(card);
         }
-
         public void AddDefenseCard(Card card)
         {
             DefenseCards.Add(card);
         }
-
         public void Clear()
         {
             AttackCards.Clear();
             DefenseCards.Clear();
         }
-
         public bool IsEmpty()
         {
             return AttackCards.Count == 0 && DefenseCards.Count == 0;
@@ -45,14 +41,6 @@ namespace DurakGame.Models
         {
             return AttackCards.Any(card => card.Rank == rank) || DefenseCards.Any(card => card.Rank == rank);
         }
-        public bool IsAttackingCard(Card card)
-        {
-            return AttackCards.Contains(card);
-        }
-        public bool IsDefendingCard(Card card)
-        {
-            return DefenseCards.Contains(card);
-        }
         public bool CanAddAttackCard(Card card)
         {
             if (IsEmpty())
@@ -61,6 +49,10 @@ namespace DurakGame.Models
             }
 
             return ContainsCardWithRank(card.Rank);
+        }
+        public bool AllAttackCardsDefended()
+        {
+            return AttackCards.Count == DefenseCards.Count;
         }
     }
 }

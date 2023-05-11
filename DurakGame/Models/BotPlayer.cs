@@ -28,21 +28,35 @@ namespace DurakGame.Models
         }
         public BotAction? SelectCardToAttack(Table table, Card trumpCard)
         {
-            Card chosenCard = Hand
-                .Where(card => card.Suit != trumpCard.Suit)
-                .OrderBy(card => Convert.ToInt32(card.Rank))
-                .FirstOrDefault();
+            Card chosenCard = null;
 
-            if (chosenCard == null)
+            if (table.IsEmpty())
             {
                 chosenCard = Hand
-                    .Where(card => card.Suit == trumpCard.Suit)
+                    .Where(card => card.Suit != trumpCard.Suit)
+                    .OrderBy(card => Convert.ToInt32(card.Rank))
+                    .FirstOrDefault();
+
+                if (chosenCard == null)
+                {
+                    chosenCard = Hand
+                        .Where(card => card.Suit == trumpCard.Suit)
+                        .OrderBy(card => Convert.ToInt32(card.Rank))
+                        .FirstOrDefault();
+                }
+            }
+            else
+            {
+                List<Rank> existingRanks = table.AttackCards.Concat(table.DefenseCards).Select(card => card.Rank).Distinct().ToList();
+                chosenCard = Hand
+                    .Where(card => existingRanks.Contains(card.Rank) && table.CanAddAttackCard(card))
                     .OrderBy(card => Convert.ToInt32(card.Rank))
                     .FirstOrDefault();
             }
 
             return chosenCard != null ? new BotAction(chosenCard, false, true) : null;
         }
+
 
         public BotAction? SelectCardToDefend(Table table, Card trumpCard)
         {
@@ -52,29 +66,16 @@ namespace DurakGame.Models
             }
             else
             {
-                foreach (Card cardOnTable in table.AttackCards)
+                if (table.AttackCards.Count > table.DefenseCards.Count)
                 {
+                    Card cardToBeat = table.AttackCards[table.DefenseCards.Count];
                     var canBeatCards = Hand
-                        .Where(card => card.Suit == cardOnTable.Suit && card.CanBeat(cardOnTable, trumpCard.Suit))
+                        .Where(card => card.CanBeat(cardToBeat, trumpCard.Suit))
                         .OrderBy(card => Convert.ToInt32(card.Rank))
                         .ToList();
-
                     if (canBeatCards.Any())
                     {
                         return new BotAction(canBeatCards.First(), true, false);
-                    }
-                }
-
-                foreach (Card cardOnTable in table.AttackCards)
-                {
-                    var trumpCards = Hand
-                        .Where(card => card.Suit == trumpCard.Suit && card.CanBeat(cardOnTable, trumpCard.Suit))
-                        .OrderBy(card => Convert.ToInt32(card.Rank))
-                        .ToList();
-
-                    if (trumpCards.Any())
-                    {
-                        return new BotAction(trumpCards.First(), true, false);
                     }
                 }
             }
@@ -89,7 +90,7 @@ namespace DurakGame.Models
 
         public BotAction? SelectCardToPlay(Table table, Card trumpCard)
         {
-            if (table.IsEmpty())
+            if (table.AllAttackCardsDefended())
             {
                 return SelectCardToAttack(table, trumpCard);
             }
@@ -100,7 +101,3 @@ namespace DurakGame.Models
         }
     }
 }
-
-
-
-

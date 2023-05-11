@@ -23,7 +23,7 @@ namespace DurakGame.Models
             }
             else
             {
-                return Suit == trumpSuit && other.Suit != trumpSuit;
+                return Suit == trumpSuit && Rank > other.Rank;
             }
         }
     }
