@@ -56,8 +56,6 @@ namespace DurakGame.Models
 
             return chosenCard != null ? new BotAction(chosenCard, false, true) : null;
         }
-
-
         public BotAction? SelectCardToDefend(Table table, Card trumpCard)
         {
             if (table.IsEmpty())
@@ -87,7 +85,6 @@ namespace DurakGame.Models
             table.Clear();
             return new BotAction(null, false, false);
         }
-
         public BotAction? SelectCardToPlay(Table table, Card trumpCard)
         {
             if (table.AllAttackCardsDefended())
