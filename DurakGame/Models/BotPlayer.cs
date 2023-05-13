@@ -67,16 +67,27 @@ namespace DurakGame.Models
                 if (table.AttackCards.Count > table.DefenseCards.Count)
                 {
                     Card cardToBeat = table.AttackCards[table.DefenseCards.Count];
-                    var canBeatCards = Hand
-                        .Where(card => card.CanBeat(cardToBeat, trumpCard.Suit))
+                    var sameSuitCards = Hand
+                        .Where(card => card.Suit == cardToBeat.Suit && card.Rank > cardToBeat.Rank)
                         .OrderBy(card => Convert.ToInt32(card.Rank))
                         .ToList();
-                    if (canBeatCards.Any())
+
+                    if (sameSuitCards.Any())
                     {
-                        return new BotAction(canBeatCards.First(), true, false);
+                        return new BotAction(sameSuitCards.First(), true, false);
+                    }
+                    var trumpCards = Hand
+                        .Where(card => card.Suit == trumpCard.Suit)
+                        .OrderBy(card => Convert.ToInt32(card.Rank))
+                        .ToList();
+
+                    if (trumpCards.Any())
+                    {
+                        return new BotAction(trumpCards.First(), true, false);
                     }
                 }
             }
+
             List<Card> cardsOnTable = table.GetAllCards();
             foreach (Card card in cardsOnTable)
             {
