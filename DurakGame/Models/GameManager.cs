@@ -1,6 +1,7 @@
 ﻿using DurakGame.Models;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 
 namespace DurakGame.Models
 {

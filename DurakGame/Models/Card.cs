@@ -21,10 +21,15 @@ namespace DurakGame.Models
             {
                 return Rank > other.Rank;
             }
-            else
+            else if (Suit == trumpSuit && other.Suit != trumpSuit)
             {
-                return Suit == trumpSuit && Rank > other.Rank;
+                return true;
             }
+            else if (Suit == trumpSuit && other.Suit == trumpSuit)
+            {
+                return Rank > other.Rank;
+            }
+            return false;
         }
     }
 }

@@ -149,7 +149,10 @@ namespace DurakGame
                     if (string.IsNullOrEmpty(ErrorMessage.Text))
                     {
                         Game.NextTurn();
-                        BotPlay();
+                        if (Game.ActivePlayer is BotPlayer)
+                        {
+                            BotPlay();
+                        }
                     }
                 }
             }
@@ -253,6 +256,10 @@ namespace DurakGame
             DisplayTable();
             UpdateDeckCardCount();
             Game.DealCards();
+            if (Game.ActivePlayer is BotPlayer)
+            {
+                BotPlay();
+            }
         }
 
         private void BeatButton_Click(object sender, RoutedEventArgs e)
@@ -263,6 +270,10 @@ namespace DurakGame
             DisplayTable();
             UpdateDeckCardCount();
             Game.DealCards();
+            if (Game.ActivePlayer is BotPlayer)
+            {
+                BotPlay();
+            }
         }
         private void BotPlay()
         {
@@ -300,6 +311,7 @@ namespace DurakGame
                         DisplayTable();
                         UpdateDeckCardCount();
                         Game.DealCards();
+                        return;
                     }
                     Game.NextTurn();
                 }
