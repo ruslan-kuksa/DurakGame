@@ -11,12 +11,14 @@ namespace DurakGame.Models
         public Card Card;
         public bool IsDefending;
         public bool IsAttacking;
+        public bool IsPassing;
 
-        public BotAction(Card card, bool isDefending, bool isAttacking)
+        public BotAction(Card card, bool isDefending, bool isAttacking, bool isPassing = false)
         {
             Card = card;
             IsDefending = isDefending;
             IsAttacking = isAttacking;
+            IsPassing = isPassing;
         }
     }
 
@@ -53,8 +55,11 @@ namespace DurakGame.Models
                     .OrderBy(card => Convert.ToInt32(card.Rank))
                     .FirstOrDefault();
             }
-
-            return chosenCard != null ? new BotAction(chosenCard, false, true) : null;
+            if (chosenCard == null)
+            {
+                return new BotAction(null, false, false, true);
+            }
+            return new BotAction(chosenCard, false, true);
         }
         public BotAction? SelectCardToDefend(Table table, Card trumpCard)
         {
@@ -72,7 +77,7 @@ namespace DurakGame.Models
                         .OrderBy(card => Convert.ToInt32(card.Rank))
                         .ToList();
 
-                    if (sameSuitCards.Any())
+                    if (sameSuitCards.Any(card => card.CanBeat(cardToBeat, trumpCard.Suit)))
                     {
                         return new BotAction(sameSuitCards.First(), true, false);
                     }
@@ -81,7 +86,7 @@ namespace DurakGame.Models
                         .OrderBy(card => Convert.ToInt32(card.Rank))
                         .ToList();
 
-                    if (trumpCards.Any())
+                    if (trumpCards.Any(card => card.CanBeat(cardToBeat, trumpCard.Suit)))
                     {
                         return new BotAction(trumpCards.First(), true, false);
                     }

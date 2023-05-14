@@ -30,6 +30,10 @@ namespace DurakGame
         public MainWindow()
         {
             InitializeComponent();
+            for (int i = 0; i < 36; i++)
+            {
+                AddCardToDeck(i);
+            }
             Game = new GameManager();
         }
 
@@ -42,10 +46,6 @@ namespace DurakGame
             DisplayPlayerHand(Game.Players[0]);
             DisplayOpponentHand(Game.Players[1]);
             UpdateDeckCardCount();
-            if (Game.TrumpCard == null)
-            {
-                MessageBox.Show("TrumpCard ще не встановлено.");
-            }
             Player firstPlayer = Game.FindLowestTrumpCard();
             if (firstPlayer != null)
             {
@@ -63,7 +63,12 @@ namespace DurakGame
         }
         private void UpdateDeckCardCount()
         {
-            DeckCounter.Content = Game.Deck.Count.ToString();
+            int deckCount = Game.Deck.Count;
+            if (Game.TrumpCard != null)
+            {
+                deckCount++;
+            }
+            DeckCounter.Content = deckCount.ToString();
         }
         private void DisplayOpponentHand(Player opponent)
         {
@@ -283,6 +288,22 @@ namespace DurakGame
 
                 if (action.HasValue)
                 {
+                    if (action.Value.IsPassing)
+                    {
+                        Game.Table.Clear();
+                        Game.EndTurn();
+                        DisplayPlayerHand(Game.Players[0]);
+                        DisplayOpponentHand(Game.Players[1]);
+                        DisplayTable();
+                        UpdateDeckCardCount();
+                        Game.DealCards();
+                        if (Game.ActivePlayer is BotPlayer)
+                        {
+                            BotPlay();
+                        }
+                        return;
+                    }
+
                     Card cardToPlay = action.Value.Card;
 
                     if (cardToPlay != null)
@@ -316,6 +337,18 @@ namespace DurakGame
                     Game.NextTurn();
                 }
             }
+        }
+        private void AddCardToDeck(int i)
+        {
+            var cardImage = new Image
+            {
+                Source = new BitmapImage(new Uri("pack://application:,,,/Resources/card_back.png")),
+                Width = 125,
+                Height = 182,
+            };
+            DeckImage.Children.Add(cardImage);
+            Canvas.SetTop(cardImage, i * 0.1);
+            Canvas.SetLeft(cardImage, 5 + i * 0.5);
         }
     }
 }

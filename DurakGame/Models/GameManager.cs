@@ -45,9 +45,21 @@ namespace DurakGame.Models
         {
             foreach (Player player in Players)
             {
-                while (player.Hand.Count < 6 && Deck.Count > 0)
+                while (player.Hand.Count < 6 && Deck.Count > 1) 
                 {
                     player.AddCardToHand(Deck.DrawCard());
+                }
+            }
+            if (Deck.Count == 1)
+            {
+                foreach (Player player in Players)
+                {
+                    if (player.Hand.Count < 6)
+                    {
+                        player.AddCardToHand(TrumpCard);
+                        Deck.DrawCard();
+                        break;
+                    }
                 }
             }
         }
@@ -75,6 +87,7 @@ namespace DurakGame.Models
             int activePlayerIndex = Players.IndexOf(ActivePlayer);
             int nextPlayerIndex = (activePlayerIndex + 1) % Players.Count;
             ActivePlayer = Players[nextPlayerIndex];
+
         }
         public void NextTurn()
         {

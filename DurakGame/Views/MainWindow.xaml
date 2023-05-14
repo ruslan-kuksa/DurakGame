@@ -33,7 +33,7 @@
                 </TransformGroup>
             </Image.RenderTransform>
         </Image>
-        <Image x:Name="DeckImage" Source="/Resources/card_back.png" Width="138" Height="198" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" RenderTransformOrigin="0.569,1" />
+        <Canvas x:Name="DeckImage" HorizontalAlignment="Left" Height="198" VerticalAlignment="Center" Width="138"/>
         <Canvas x:Name="TablePanel" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Height="Auto" />
         <Label x:Name="DeckCounter" Content="0" Margin="70,358,79,340" FontSize="14" FontWeight="Bold" Foreground="White"/>
         <Label x:Name="FirstPlayerLabel" Margin="20,20,1593,893" FontSize="16" FontWeight="Bold" Foreground="White"/>
