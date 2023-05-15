@@ -110,5 +110,19 @@ namespace DurakGame.Models
             DealCards();
             SwitchActivePlayer();
         }
+        public Player CheckWinner()
+        {
+            if (Deck.Count == 0)
+            {
+                foreach (Player player in Players)
+                {
+                    if (player.Hand.Count == 0)
+                    {
+                        return player;
+                    }
+                }
+            }
+            return null;
+        }
     }
 }

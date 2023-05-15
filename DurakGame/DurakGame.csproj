@@ -56,10 +56,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ViewModels\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Resource Include="Resources\ten_of_clubs.png" />
     <Resource Include="Resources\ten_of_diamonds.png" />
     <Resource Include="Resources\ten_of_hearts.png" />

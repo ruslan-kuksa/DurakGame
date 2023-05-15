@@ -13,7 +13,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
+using System.Windows.Media.Animation;   
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -154,6 +154,7 @@ namespace DurakGame
                     if (string.IsNullOrEmpty(ErrorMessage.Text))
                     {
                         Game.NextTurn();
+                        CheckAndDisplayWinner();
                         if (Game.ActivePlayer is BotPlayer)
                         {
                             BotPlay();
@@ -335,6 +336,7 @@ namespace DurakGame
                         return;
                     }
                     Game.NextTurn();
+                    CheckAndDisplayWinner();
                 }
             }
         }
@@ -349,6 +351,40 @@ namespace DurakGame
             DeckImage.Children.Add(cardImage);
             Canvas.SetTop(cardImage, i * 0.1);
             Canvas.SetLeft(cardImage, 5 + i * 0.5);
+        }
+        private void CheckAndDisplayWinner()
+        {
+            Player winner = Game.CheckWinner();
+            if (winner != null)
+            {
+                MessageBox.Show($"{winner.Name} is the winner!");
+                MessageBoxResult result = MessageBox.Show("Do you want to play again?", "Play Again", MessageBoxButton.YesNo);
+                switch (result)
+                {
+                    case MessageBoxResult.Yes:
+                        ResetGame();
+                        break;
+                    case MessageBoxResult.No:
+                        Application.Current.Shutdown();
+                        break;
+                }
+            }
+        }
+        private void ResetGame()
+        {
+            PlayerHandPanel.Children.Clear();
+            OpponentHandPanel.Children.Clear();
+            TablePanel.Children.Clear();
+            DeckImage.Children.Clear();
+            ErrorMessage.Text = "";
+            FirstPlayerLabel.Content = "";
+            DeckCounter.Content = "0";
+            Game = new GameManager();
+            for (int i = 0; i < 36; i++)
+            {
+                AddCardToDeck(i);
+            }
+            StartGameButton.IsEnabled = true;
         }
     }
 }
