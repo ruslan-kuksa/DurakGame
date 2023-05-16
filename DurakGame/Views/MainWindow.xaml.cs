@@ -115,44 +115,12 @@ namespace DurakGame
 
                 if (Game.Players.Count > 0 && Game.Players[0] is HumanPlayer player && Game.Players[1] is BotPlayer bot)
                 {
-                    bool isAttacking = Game.Table.DefenseCards.Count == Game.Table.AttackCards.Count;
-
-                    if (isAttacking)
+                    if (player.PlayCard(card, Game.Table, Game.TrumpCard, out string errorMessage))
                     {
-                        if (Game.Table.CanAddAttackCard(card))
-                        {
-                            player.RemoveCardFromHand(card);
-                            Game.Table.AddAttackCard(card);
-                            AddCardToTable(card, false);
-                            DisplayPlayerHand(player);
-                            DisplayOpponentHand(bot);
-                            ErrorMessage.Text = "";
-                        }
-                        else
-                        {
-                            ErrorMessage.Text = "Ця карта не може бути підкинута.";
-                        }
-                    }
-                    else
-                    {
-                        Card lastAttackCard = Game.Table.AttackCards.LastOrDefault();
-                        if (lastAttackCard != null && card.CanBeat(lastAttackCard, Game.TrumpCard.Suit))
-                        {
-                            player.RemoveCardFromHand(card);
-                            Game.Table.AddDefenseCard(card);
-                            AddCardToTable(card, true);
-                            DisplayPlayerHand(player);
-                            DisplayOpponentHand(bot);
-                            ErrorMessage.Text = "";
-                        }
-                        else
-                        {
-                            ErrorMessage.Text = "Ця карта не може побити атакуючу карту.";
-                        }
-                    }
-
-                    if (string.IsNullOrEmpty(ErrorMessage.Text))
-                    {
+                        AddCardToTable(card, Game.Table.DefenseCards.Contains(card));
+                        DisplayPlayerHand(player);
+                        DisplayOpponentHand(bot);
+                        ErrorMessage.Text = "";
                         Game.NextTurn();
                         CheckAndDisplayWinner();
                         if (Game.ActivePlayer is BotPlayer)
@@ -160,11 +128,15 @@ namespace DurakGame
                             BotPlay();
                         }
                     }
+                    else
+                    {
+                        ErrorMessage.Text = errorMessage;
+                    }
                 }
             }
             else
             {
-                ErrorMessage.Text = "Зараз хід бота, зачекайте своєї черги.";
+                ErrorMessage.Text = "Зараз хід бота, зачекайте своєї черги";
             }
         }
 
@@ -284,7 +256,7 @@ namespace DurakGame
         private void BotPlay()
         {
             if (Game.ActivePlayer is BotPlayer bot)
-            {
+            { 
                 BotAction? action = bot.SelectCardToPlay(Game.Table, Game.TrumpCard);
 
                 if (action.HasValue)
@@ -313,10 +285,16 @@ namespace DurakGame
 
                         if (action.Value.IsDefending)
                         {
+                            BeatButton.Visibility = Visibility.Visible;
+                            BeatButton.IsEnabled = true;
+                            TakeButton.Visibility = Visibility.Hidden;
                             Game.Table.AddDefenseCard(cardToPlay);
                         }
                         else
                         {
+                            BeatButton.Visibility = Visibility.Hidden;
+                            TakeButton.Visibility = Visibility.Visible;
+                            TakeButton.IsEnabled = true;
                             Game.Table.AddAttackCard(cardToPlay);
                         }
 

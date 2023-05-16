@@ -13,10 +13,8 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Button Grid.Row="1" x:Name="StartGameButton" Content="Почати гру" Width="200" Height="50" Click="StartGameButton_Click" Margin="860,5,860,5"/>
-        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,150,0">
-            <Button x:Name="TakeButton" Content="Взяти" Width="200" Height="50" Click="TakeButton_Click" IsEnabled="False" Margin="0,0,40,0"/>
-            <Button x:Name="BeatButton" Content="Бито" Width="200" Height="50" Click="BeatButton_Click" IsEnabled="False"/>
-        </StackPanel>
+        <Button Grid.Row="1" x:Name="TakeButton" Content="Взяти" Width="200" Height="50" Click="TakeButton_Click" IsEnabled="False" Margin="1259,5,461,5"/>
+        <Button Grid.Row="1" x:Name="BeatButton" Content="Бито" Width="200" Height="50" Click="BeatButton_Click" IsEnabled="False" Margin="1594,5,126,5"/>
         <StackPanel Grid.Row="0" x:Name="PlayerHandPanel" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom">
 
         </StackPanel>

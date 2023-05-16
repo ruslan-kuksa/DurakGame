@@ -92,13 +92,6 @@ namespace DurakGame.Models
                     }
                 }
             }
-
-            List<Card> cardsOnTable = table.GetAllCards();
-            foreach (Card card in cardsOnTable)
-            {
-                this.AddCardToHand(card);
-            }
-            table.Clear();
             return new BotAction(null, false, false);
         }
         public BotAction? SelectCardToPlay(Table table, Card trumpCard)

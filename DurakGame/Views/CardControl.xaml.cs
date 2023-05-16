@@ -43,6 +43,8 @@ namespace DurakGame.Views
         public CardControl()
         {
             InitializeComponent();
+            MouseEnter += CardControl_MouseEnter;
+            MouseLeave += CardControl_MouseLeave;
         }
         private static void OnCardChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -63,6 +65,14 @@ namespace DurakGame.Views
             {
                 RaiseCardClickedEvent();
             }
+        }
+        private void CardControl_MouseEnter(object sender, MouseEventArgs e)
+        {
+            CardAnimation.Y = -20;
+        }
+        private void CardControl_MouseLeave(object sender, MouseEventArgs e)
+        {
+            CardAnimation.Y = 0;
         }
     }
 }

@@ -12,22 +12,46 @@ namespace DurakGame.Models
         {
 
         }
-        public override bool IsHuman()
-        {
-            return true;
-        }
-        public bool CanAttackWithCards(List<Card> cards)
-        {
-            if (cards.Count == 0)
-            {
-                return false;
-            }
-            Rank rank = cards[0].Rank;
-            return cards.All(card => card.Rank == rank);
-        }
         public List<Card> GetAllCardsOfRank(Rank rank)
         {
             return Hand.Where(card => card.Rank == rank).ToList();
+        }
+        public bool PlayCard(Card card, Table table, Card trumpCard, out string ErrorMessage)
+        {
+            ErrorMessage = string.Empty;
+            if (Hand.Contains(card))
+            {
+                bool isAttacking = table.DefenseCards.Count == table.AttackCards.Count;
+
+                if (isAttacking)
+                {
+                    if (table.CanAddAttackCard(card))
+                    {
+                        RemoveCardFromHand(card);
+                        table.AddAttackCard(card);
+                        return true;
+                    }
+                    else
+                    {
+                        ErrorMessage = "Цю карту не можливо підкинути";
+                    }
+                }
+                else
+                {
+                    Card lastAttackCard = table.AttackCards.LastOrDefault();
+                    if (lastAttackCard != null && card.CanBeat(lastAttackCard, trumpCard.Suit))
+                    {
+                        RemoveCardFromHand(card);
+                        table.AddDefenseCard(card);
+                        return true;
+                    }
+                    else
+                    {
+                        ErrorMessage = "Ця карта не може побити атакуючу карту";
+                    }
+                }
+            }
+            return false;
         }
     }
 }

@@ -6,8 +6,11 @@
              xmlns:local="clr-namespace:DurakGame.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Border BorderBrush="Black" BorderThickness="1" CornerRadius="5" Background="White">
+    <Border BorderBrush="Transparent" BorderThickness="1" CornerRadius="5" Background="Transparent">
         <Grid>
+            <Grid.RenderTransform>
+                <TranslateTransform x:Name="CardAnimation" X="0" Y="0"/>
+            </Grid.RenderTransform>
             <Image x:Name="CardImage" Stretch="Uniform" MouseDown="CardControl_MouseDown"/>
         </Grid>
     </Border>

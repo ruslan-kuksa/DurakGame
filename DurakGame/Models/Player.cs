@@ -26,13 +26,5 @@ namespace DurakGame.Models
         {
             Hand.Remove(card);
         }
-        public bool HasCardsInHand()
-        {
-            return Hand.Count > 0;
-        }
-        public virtual bool IsHuman()
-        {
-            return false;
-        }
     }
 }
