@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -69,11 +70,23 @@ namespace DurakGame
                 deckCount++;
             }
             DeckCounter.Content = deckCount.ToString();
+            if (deckCount == 0)
+            {
+                DeckImage.Visibility = Visibility.Hidden;
+                TrumpCardImage.Visibility = Visibility.Hidden;
+                DeckCounter.Visibility = Visibility.Hidden;
+            }
         }
         private void DisplayOpponentHand(Player opponent)
         {
             OpponentHandPanel.Children.Clear();
-
+            double CardMargin = 2;
+            if (opponent.Hand.Count >= 30)
+                CardMargin = -100;
+            else if (opponent.Hand.Count >= 24)
+                CardMargin = -75;
+            else if (opponent.Hand.Count >= 12)
+                CardMargin = -50;
             foreach (Card card in opponent.Hand)
             {
                 EnemyCardControl enemyCardControl = new EnemyCardControl
@@ -81,7 +94,7 @@ namespace DurakGame
                     Card = card,
                     Width = 125,
                     Height = 182,
-                    Margin = new Thickness(2)
+                    Margin = new Thickness(CardMargin, 0, 0, 0)
                 };
 
                 OpponentHandPanel.Children.Add(enemyCardControl);
@@ -91,6 +104,13 @@ namespace DurakGame
         private void DisplayPlayerHand(Player player)
         {
             PlayerHandPanel.Children.Clear();
+            double CardMargin = 2;
+            if (player.Hand.Count >= 30)
+                CardMargin = -100;
+            else if (player.Hand.Count >= 24)
+                CardMargin = -75;
+            else if (player.Hand.Count >= 12)
+                CardMargin = -50;
 
             foreach (Card card in player.Hand)
             {
@@ -99,14 +119,14 @@ namespace DurakGame
                     Card = card,
                     Width = 125,
                     Height = 182,
-                    Margin = new Thickness(2)
+                    Margin = new Thickness(CardMargin, 0, 0, 0)
                 };
 
                 cardControl.MouseLeftButtonDown += CardControl_MouseLeftButtonDown;
                 PlayerHandPanel.Children.Add(cardControl);
             }
         }
-
+        private Random rand = new Random();
         private void CardControl_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (Game.ActivePlayer is HumanPlayer && sender is CardControl cardControl)
@@ -253,8 +273,9 @@ namespace DurakGame
                 BotPlay();
             }
         }
-        private void BotPlay()
+        private async void BotPlay()
         {
+            await Task.Delay(2000);
             if (Game.ActivePlayer is BotPlayer bot)
             { 
                 BotAction? action = bot.SelectCardToPlay(Game.Table, Game.TrumpCard);
@@ -363,6 +384,9 @@ namespace DurakGame
                 AddCardToDeck(i);
             }
             StartGameButton.IsEnabled = true;
+            DeckImage.Visibility = Visibility.Visible;
+            TrumpCardImage.Visibility = Visibility.Visible;
+            DeckCounter.Visibility = Visibility.Visible;
         }
     }
 }

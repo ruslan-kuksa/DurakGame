@@ -68,7 +68,7 @@ namespace DurakGame.Views
         }
         private void CardControl_MouseEnter(object sender, MouseEventArgs e)
         {
-            CardAnimation.Y = -20;
+            CardAnimation.Y = -30;
         }
         private void CardControl_MouseLeave(object sender, MouseEventArgs e)
         {
