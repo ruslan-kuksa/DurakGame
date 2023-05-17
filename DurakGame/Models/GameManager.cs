@@ -58,6 +58,7 @@ namespace DurakGame.Models
                     {
                         player.AddCardToHand(TrumpCard);
                         Deck.DrawCard();
+                        Deck.IsTrumpCardTaken = true;
                         break;
                     }
                 }

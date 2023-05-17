@@ -64,7 +64,7 @@ namespace DurakGame
         private void UpdateDeckCardCount()
         {
             int deckCount = Game.Deck.Count;
-            if (Game.TrumpCard != null)
+            if (!Game.Deck.IsTrumpCardTaken)
             {
                 deckCount++;
             }

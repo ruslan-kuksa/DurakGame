@@ -9,6 +9,7 @@ namespace DurakGame.Models
     public class Deck
     {
         private List<Card> cards { get; set; }
+        public bool IsTrumpCardTaken { get; set; } = false;
         public Deck()
         {
             cards = new List<Card>();
@@ -37,6 +38,10 @@ namespace DurakGame.Models
             if (cards.Count == 0) 
                 return null;
             Card card = cards[0];
+            if (Count == 0)
+            {
+                IsTrumpCardTaken = true;
+            }
             cards.RemoveAt(0);
             return card;
         }
