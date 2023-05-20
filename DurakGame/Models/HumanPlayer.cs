@@ -12,10 +12,6 @@ namespace DurakGame.Models
         {
 
         }
-        public List<Card> GetAllCardsOfRank(Rank rank)
-        {
-            return Hand.Where(card => card.Rank == rank).ToList();
-        }
         public bool PlayCard(Card card, Table table, Card trumpCard, out string ErrorMessage)
         {
             ErrorMessage = string.Empty;

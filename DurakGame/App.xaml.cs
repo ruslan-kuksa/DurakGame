@@ -13,5 +13,6 @@ namespace DurakGame
     /// </summary>
     public partial class App : Application
     {
+        public static string BackgroundImagePath { get; set; }
     }
 }

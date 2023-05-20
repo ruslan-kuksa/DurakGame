@@ -63,33 +63,26 @@ namespace DurakGame.Models
         }
         public BotAction? SelectCardToDefend(Table table, Card trumpCard)
         {
-            if (table.IsEmpty())
+            if (table.AttackCards.Count > table.DefenseCards.Count)
             {
-                return SelectCardToAttack(table, trumpCard);
-            }
-            else
-            {
-                if (table.AttackCards.Count > table.DefenseCards.Count)
+                Card cardToBeat = table.AttackCards[table.DefenseCards.Count];
+                var sameSuitCards = Hand
+                    .Where(card => card.Suit == cardToBeat.Suit && card.Rank > cardToBeat.Rank)
+                    .OrderBy(card => Convert.ToInt32(card.Rank))
+                    .ToList();
+
+                if (sameSuitCards.Any(card => card.CanBeat(cardToBeat, trumpCard.Suit)))
                 {
-                    Card cardToBeat = table.AttackCards[table.DefenseCards.Count];
-                    var sameSuitCards = Hand
-                        .Where(card => card.Suit == cardToBeat.Suit && card.Rank > cardToBeat.Rank)
-                        .OrderBy(card => Convert.ToInt32(card.Rank))
-                        .ToList();
+                    return new BotAction(sameSuitCards.First(), true, false);
+                }
+                var trumpCards = Hand
+                    .Where(card => card.Suit == trumpCard.Suit)
+                    .OrderBy(card => Convert.ToInt32(card.Rank))
+                    .ToList();
 
-                    if (sameSuitCards.Any(card => card.CanBeat(cardToBeat, trumpCard.Suit)))
-                    {
-                        return new BotAction(sameSuitCards.First(), true, false);
-                    }
-                    var trumpCards = Hand
-                        .Where(card => card.Suit == trumpCard.Suit)
-                        .OrderBy(card => Convert.ToInt32(card.Rank))
-                        .ToList();
-
-                    if (trumpCards.Any(card => card.CanBeat(cardToBeat, trumpCard.Suit)))
-                    {
-                        return new BotAction(trumpCards.First(), true, false);
-                    }
+                if (trumpCards.Any(card => card.CanBeat(cardToBeat, trumpCard.Suit)))
+                {
+                    return new BotAction(trumpCards.First(), true, false);
                 }
             }
             return new BotAction(null, false, false);

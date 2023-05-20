@@ -13,6 +13,15 @@
     <Compile Update="Views\EnemyCardControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\MainGamePage.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\MenuPage.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\SettingsPage.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\CardControl.xaml">
@@ -21,7 +30,16 @@
     <Page Update="Views\EnemyCardControl.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Views\MainGamePage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Views\MainWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\MenuPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\SettingsPage.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>

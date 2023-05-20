@@ -1,0 +1,18 @@
+﻿<Page x:Class="DurakGame.Views.MenuPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:DurakGame.Views"
+      Title="MenuPage" Width="1920" Height="1080">
+
+    <Grid>
+        <Grid.Background>
+            <ImageBrush Stretch="UniformToFill" TileMode="None" ImageSource="/Resources/menu_background.png"/>
+        </Grid.Background>
+        <Button x:Name="StartGameButton" Content="Почати гру" HorizontalAlignment="Center" VerticalAlignment="Top" Height="90" Width="330" FontSize="48" Margin="0,698,0,0" Background="#FFC84D4D" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="StartGameButton_Click"/>
+        <Button x:Name="SettingsButton" Content="Налаштування" HorizontalAlignment="Center" Margin="0,820,0,0" VerticalAlignment="Top" Height="90" Width="330" Background="#FFC84D4D" FontSize="48" Click="SettingsButton_Click"/>
+        <Button x:Name="ExitButton" Content="Вихід" HorizontalAlignment="Center" Margin="0,946,0,0" VerticalAlignment="Top" Height="90" Width="330" Background="#FFC84D4D" FontSize="48" Click="ExitButton_Click"/>
+
+    </Grid>
+</Page>

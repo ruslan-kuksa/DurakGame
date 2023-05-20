@@ -1,0 +1,33 @@
+﻿<Page x:Class="DurakGame.Views.SettingsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:DurakGame.Views"
+      Title="SettingsPage" Width="1920" Height="1080">
+
+    <Grid Height="1080">
+        <Grid.Background>
+            <ImageBrush Stretch="UniformToFill" ImageSource="/Resources/poker_red_background.jpg"/>
+        </Grid.Background>
+        <CheckBox x:Name="FullScreen" Content="Повноекранний режим" HorizontalAlignment="Left" Margin="520,218,0,0" VerticalAlignment="Top" FontSize="14" BorderThickness="1.5,1.5,1.5,1.5" Height="18" RenderTransformOrigin="0.642,0.363" Width="176" Background="White" Checked="FullScreen_Checked" Unchecked="FullScreen_Unchecked">
+            <CheckBox.LayoutTransform>
+                <ScaleTransform ScaleX="5" ScaleY="5"/>
+            </CheckBox.LayoutTransform>
+        </CheckBox>
+        <Button x:Name="BackButton" Content="Назад у меню" HorizontalAlignment="Center" Margin="0,759,0,0" VerticalAlignment="Top" Height="90" Width="330" FontSize="48" Background="#FFC84D4D" Click="BackButton_Click"/>
+        <Label Content="Фон у грі" HorizontalAlignment="Center" Margin="0,354,0,0" VerticalAlignment="Top" Height="90" Width="414" FontSize="48" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <Border x:Name="RedDBorder" BorderThickness="0" BorderBrush="Aqua" Width="390" Height="222" Margin="72,455,1458,403" MouseLeftButtonDown="RedDBorder_MouseLeftButtonDown">
+            <Image Height="216" Width="384" Stretch="UniformToFill" Source="/Resources/poker_red_background.jpg"/>
+        </Border>
+        <Border x:Name="BlackDBorder" BorderThickness="0" BorderBrush="Aqua" Width="390" Height="222" Margin="536,455,994,403" MouseLeftButtonDown="BlackDBorder_MouseLeftButtonDown">
+            <Image Height="216" Width="384" Stretch="UniformToFill" Source="/Resources/poker_black_background.jpg"/>
+        </Border>
+        <Border x:Name="GreenDBorder" BorderThickness="0" BorderBrush="Aqua" Margin="996,455,534,403" Width="390" Height="222" MouseLeftButtonDown="GreenDBorder_MouseLeftButtonDown">
+            <Image Height="216" Width="384" Stretch="UniformToFill" Source="/Resources/poker_green_background.jpg"/>
+        </Border>
+        <Border x:Name="GreenSBorder" BorderThickness="0" BorderBrush="Aqua" Width="390" Height="222" Margin="1458,455,72,403" MouseLeftButtonDown="GreenSBorder_MouseLeftButtonDown">
+            <Image Height="216" Width="384" Stretch="UniformToFill" Source="/Resources/green_background.png"/>
+        </Border>
+    </Grid>
+</Page>

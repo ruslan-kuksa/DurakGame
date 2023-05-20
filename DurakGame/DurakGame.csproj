@@ -25,6 +25,7 @@
     <None Remove="Resources\eight_of_diamonds.png" />
     <None Remove="Resources\eight_of_hearts.png" />
     <None Remove="Resources\eight_of_spades.png" />
+    <None Remove="Resources\green_background.png" />
     <None Remove="Resources\jack_of_clubs.png" />
     <None Remove="Resources\jack_of_diamonds.png" />
     <None Remove="Resources\jack_of_hearts.png" />
@@ -33,10 +34,14 @@
     <None Remove="Resources\king_of_diamonds.png" />
     <None Remove="Resources\king_of_hearts.png" />
     <None Remove="Resources\king_of_spades.png" />
+    <None Remove="Resources\menu_background.png" />
     <None Remove="Resources\nine_of_clubs.png" />
     <None Remove="Resources\nine_of_diamonds.png" />
     <None Remove="Resources\nine_of_hearts.png" />
     <None Remove="Resources\nine_of_spades.png" />
+    <None Remove="Resources\poker_black_background.jpg" />
+    <None Remove="Resources\poker_green_background.jpg" />
+    <None Remove="Resources\poker_red_background.jpg" />
     <None Remove="Resources\queen_of_clubs.png" />
     <None Remove="Resources\queen_of_diamonds.png" />
     <None Remove="Resources\queen_of_hearts.png" />
@@ -56,6 +61,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\green_background.png" />
+    <Resource Include="Resources\menu_background.png" />
+    <Resource Include="Resources\poker_black_background.jpg" />
+    <Resource Include="Resources\poker_green_background.jpg" />
+    <Resource Include="Resources\poker_red_background.jpg" />
     <Resource Include="Resources\ten_of_clubs.png" />
     <Resource Include="Resources\ten_of_diamonds.png" />
     <Resource Include="Resources\ten_of_hearts.png" />
