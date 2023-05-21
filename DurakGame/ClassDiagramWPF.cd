@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="DurakGame.Views.SettingsPage">
+    <Position X="2.75" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAgAACAAAAAAAAAAAACQAAAE=</HashCode>
+      <FileName>Views\SettingsPage.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DurakGame.Views.MenuPage">
+    <Position X="4.5" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAABAAAAIA=</HashCode>
+      <FileName>Views\MenuPage.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DurakGame.MainGamePage">
+    <Position X="6.25" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIBAAAAAAEAUIAgAgAAQAACgEAAQAEAAAAAAAAIA=</HashCode>
+      <FileName>Views\MainGamePage.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DurakGame.MainWindow">
+    <Position X="8.25" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Views\MainWindow.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.Windows.Controls.Page" Collapsed="true">
+    <Position X="4.5" Y="6.25" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.Windows.Window" Collapsed="true">
+    <Position X="8.25" Y="6.25" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="DurakGame.Views.CardControl">
+    <Position X="10" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABBAAAAAAAAAAAAIAAAAFJAAAAAAAAAAIAAAAIIAAA=</HashCode>
+      <FileName>Views\CardControl.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DurakGame.Views.EnemyCardControl">
+    <Position X="11.75" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABBAAAAAAAAAAAAAAAAACAAAAAAAAAAgIAAAAEIAAA=</HashCode>
+      <FileName>Views\EnemyCardControl.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.Windows.Controls.UserControl" Collapsed="true">
+    <Position X="11.75" Y="6.25" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -31,6 +31,9 @@ namespace DurakGame
         public MainGamePage()
         {
             InitializeComponent();
+            var newImageSource = new BitmapImage(new Uri(App.BackgroundImagePath.ToString(), UriKind.RelativeOrAbsolute));
+            var newImageBrush = new ImageBrush(newImageSource);
+            BackGrid.Background = newImageBrush;
             for (int i = 0; i < 36; i++)
             {
                 AddCardToDeck(i);
