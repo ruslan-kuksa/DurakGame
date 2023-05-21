@@ -33,10 +33,6 @@ namespace DurakGame.Models
         {
             return AttackCards.Count == 0 && DefenseCards.Count == 0;
         }
-        public List<Card> GetAllCards()
-        {
-            return AttackCards.Concat(DefenseCards).ToList();
-        }
         public bool ContainsCardWithRank(Rank rank)
         {
             return AttackCards.Any(card => card.Rank == rank) || DefenseCards.Any(card => card.Rank == rank);

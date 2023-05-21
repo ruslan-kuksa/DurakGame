@@ -28,7 +28,7 @@ namespace DurakGame.Models
         {
 
         }
-        public BotAction? SelectCardToAttack(Table table, Card trumpCard)
+        public BotAction SelectCardToAttack(Table table, Card trumpCard)
         {
             Card chosenCard = null;
 
@@ -61,7 +61,7 @@ namespace DurakGame.Models
             }
             return new BotAction(chosenCard, false, true);
         }
-        public BotAction? SelectCardToDefend(Table table, Card trumpCard)
+        public BotAction SelectCardToDefend(Table table, Card trumpCard)
         {
             if (table.AttackCards.Count > table.DefenseCards.Count)
             {
@@ -87,7 +87,7 @@ namespace DurakGame.Models
             }
             return new BotAction(null, false, false);
         }
-        public BotAction? SelectCardToPlay(Table table, Card trumpCard)
+        public BotAction SelectCardToPlay(Table table, Card trumpCard)
         {
             if (table.AllAttackCardsDefended())
             {

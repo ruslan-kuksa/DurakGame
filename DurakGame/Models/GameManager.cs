@@ -12,14 +12,12 @@ namespace DurakGame.Models
         public Deck Deck { get; private set; }
         public Card TrumpCard { get; private set; }
         public Table Table { get; private set; }
-        public List<Card> DiscardPile { get; private set; }
 
         public GameManager()
         {
             Players = new List<Player>();
             Deck = new Deck();
             Table = new Table();
-            DiscardPile = new List<Card>();
         }
         public void AddPlayer(Player player)
         {
@@ -96,7 +94,6 @@ namespace DurakGame.Models
         }
         public void EndTurn()
         {
-            DiscardPile.AddRange(Table.GetAllCards());
             Table.Clear();
             DealCards();
             SwitchActivePlayer();
