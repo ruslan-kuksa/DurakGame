@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DurakGame.Strategy;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,78 +25,27 @@ namespace DurakGame.Models
 
     public class BotPlayer : Player
     {
-        public BotPlayer(string name) : base(name)
+        private readonly IBotStrategy _attackStrategy;
+        private readonly IBotStrategy _defenseStrategy;
+
+        public BotPlayer(string name,
+                         IBotStrategy attackStrategy,
+                         IBotStrategy defenseStrategy) :base(name)
         {
-
+            _attackStrategy = attackStrategy;
+            _defenseStrategy = defenseStrategy;
         }
-        public BotAction SelectCardToAttack(Table table, Card trumpCard)
-        {
-            Card chosenCard = null;
 
-            if (table.IsEmpty())
-            {
-                chosenCard = Hand
-                    .Where(card => card.Suit != trumpCard.Suit)
-                    .OrderBy(card => Convert.ToInt32(card.Rank))
-                    .FirstOrDefault();
-
-                if (chosenCard == null)
-                {
-                    chosenCard = Hand
-                        .Where(card => card.Suit == trumpCard.Suit)
-                        .OrderBy(card => Convert.ToInt32(card.Rank))
-                        .FirstOrDefault();
-                }
-            }
-            else
-            {
-                List<Rank> existingRanks = table.AttackCards.Concat(table.DefenseCards).Select(card => card.Rank).Distinct().ToList();
-                chosenCard = Hand
-                    .Where(card => existingRanks.Contains(card.Rank) && table.CanAddAttackCard(card))
-                    .OrderBy(card => Convert.ToInt32(card.Rank))
-                    .FirstOrDefault();
-            }
-            if (chosenCard == null)
-            {
-                return new BotAction(null, false, false, true);
-            }
-            return new BotAction(chosenCard, false, true);
-        }
-        public BotAction SelectCardToDefend(Table table, Card trumpCard)
-        {
-            if (table.AttackCards.Count > table.DefenseCards.Count)
-            {
-                Card cardToBeat = table.AttackCards[table.DefenseCards.Count];
-                var sameSuitCards = Hand
-                    .Where(card => card.Suit == cardToBeat.Suit && card.Rank > cardToBeat.Rank)
-                    .OrderBy(card => Convert.ToInt32(card.Rank))
-                    .ToList();
-
-                if (sameSuitCards.Any(card => card.CanBeat(cardToBeat, trumpCard.Suit)))
-                {
-                    return new BotAction(sameSuitCards.First(), true, false);
-                }
-                var trumpCards = Hand
-                    .Where(card => card.Suit == trumpCard.Suit)
-                    .OrderBy(card => Convert.ToInt32(card.Rank))
-                    .ToList();
-
-                if (trumpCards.Any(card => card.CanBeat(cardToBeat, trumpCard.Suit)))
-                {
-                    return new BotAction(trumpCards.First(), true, false);
-                }
-            }
-            return new BotAction(null, false, false);
-        }
         public BotAction SelectCardToPlay(Table table, Card trumpCard)
         {
-            if (table.AllAttackCardsDefended())
+            bool isAttacking = table.DefenseCards.Count == table.AttackCards.Count;
+            if (isAttacking)
             {
-                return SelectCardToAttack(table, trumpCard);
+                return _attackStrategy.SelectCard(this, table, trumpCard);
             }
             else
             {
-                return SelectCardToDefend(table, trumpCard);
+                return _defenseStrategy.SelectCard(this, table, trumpCard);
             }
         }
     }

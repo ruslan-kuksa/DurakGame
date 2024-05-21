@@ -1,4 +1,5 @@
 ﻿using DurakGame.Models;
+using DurakGame.Strategy;
 using DurakGame.Views;
 using System;
 using System.Collections.Generic;
@@ -43,8 +44,8 @@ namespace DurakGame
 
         private void StartGameButton_Click(object sender, RoutedEventArgs e)
         {
-            Game.AddPlayer(new HumanPlayer("Player"));
-            Game.AddPlayer(new BotPlayer("Bot"));
+            Game.AddPlayer(new HumanPlayer("Player", new HumanAttackStrategy(), new HumanDefenseStrategy()));
+            Game.AddPlayer(new BotPlayer("Bot", new BotAttackStrategy(), new BotDefenseStrategy()));
             Game.StartGame();
             UpdateTrumpCardImage();
             DisplayPlayerHand(Game.Players[0]);
