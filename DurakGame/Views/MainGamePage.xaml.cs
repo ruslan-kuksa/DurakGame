@@ -1,4 +1,5 @@
-﻿using DurakGame.Models;
+﻿using DurakGame.Memento;
+using DurakGame.Models;
 using DurakGame.Strategy;
 using DurakGame.Views;
 using System;
@@ -29,6 +30,8 @@ namespace DurakGame
     public partial class MainGamePage : Page
     {
         private GameManager Game;
+        private GameCaretaker Caretaker = new GameCaretaker();
+
         public MainGamePage()
         {
             InitializeComponent();
@@ -66,6 +69,7 @@ namespace DurakGame
             }
             ((Button)sender).IsEnabled = false;
         }
+
         private void UpdateDeckCardCount()
         {
             int deckCount = Game.Deck.Count;
@@ -81,6 +85,7 @@ namespace DurakGame
                 DeckCounter.Visibility = Visibility.Hidden;
             }
         }
+
         private void DisplayOpponentHand(Player opponent)
         {
             OpponentHandPanel.Children.Clear();
@@ -130,6 +135,7 @@ namespace DurakGame
                 PlayerHandPanel.Children.Add(cardControl);
             }
         }
+
         private void CardControl_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (Game.ActivePlayer is HumanPlayer && sender is CardControl cardControl)
@@ -138,12 +144,14 @@ namespace DurakGame
 
                 if (Game.Players.Count > 0 && Game.Players[0] is HumanPlayer player && Game.Players[1] is BotPlayer bot)
                 {
+                    Caretaker.Save(Game.SaveState());
                     if (player.PlayCard(card, Game.Table, Game.TrumpCard, out string errorMessage))
                     {
                         AddCardToTable(card, Game.Table.DefenseCards.Contains(card));
                         DisplayPlayerHand(player);
                         DisplayOpponentHand(bot);
                         ErrorMessage.Text = "";
+                        ShowUndoButton();
                         Game.NextTurn();
                         CheckAndDisplayWinner();
                         if (Game.ActivePlayer is BotPlayer)
@@ -179,6 +187,7 @@ namespace DurakGame
 
             TablePanel.Children.Add(cardControl);
         }
+
         private void UpdateTrumpCardImage()
         {
             Suit trumpSuit = Game.TrumpCard.Suit;
@@ -186,13 +195,21 @@ namespace DurakGame
             string rankString = Game.TrumpCard.Rank.ToString().ToLower();
             string imagePath = $"pack://application:,,,/Resources/{rankString}_of_{suitString}.png";
             TrumpCardImage.Source = new BitmapImage(new Uri(imagePath, UriKind.Absolute));
-
         }
 
         private void DisplayTable()
         {
             TablePanel.Children.Clear();
+            foreach (var card in Game.Table.AttackCards)
+            {
+                AddCardToTable(card, false);
+            }
+            foreach (var card in Game.Table.DefenseCards)
+            {
+                AddCardToTable(card, true);
+            }
         }
+
         private void TakeButton_Click(object sender, RoutedEventArgs e)
         {
             Player player = Game.Players[0];
@@ -222,6 +239,7 @@ namespace DurakGame
                 BotPlay();
             }
         }
+
         private async void BotPlay()
         {
             await Task.Delay(2000);
@@ -288,6 +306,7 @@ namespace DurakGame
                 }
             }
         }
+
         private void AddCardToDeck(int i)
         {
             var cardImage = new Image
@@ -300,6 +319,7 @@ namespace DurakGame
             Canvas.SetTop(cardImage, i * 0.1);
             Canvas.SetLeft(cardImage, 5 + i * 0.5);
         }
+
         private void CheckAndDisplayWinner()
         {
             Player winner = Game.CheckWinner();
@@ -318,6 +338,7 @@ namespace DurakGame
                 }
             }
         }
+
         private void ResetGame()
         {
             PlayerHandPanel.Children.Clear();
@@ -336,6 +357,25 @@ namespace DurakGame
             DeckImage.Visibility = Visibility.Visible;
             TrumpCardImage.Visibility = Visibility.Visible;
             DeckCounter.Visibility = Visibility.Visible;
+        }
+
+        private void UndoButton_Click(object sender, RoutedEventArgs e)
+        {
+            GameMemento memento = Caretaker.Undo();
+            Game.RestoreState(memento);
+            DisplayPlayerHand(Game.Players[0]);
+            DisplayOpponentHand(Game.Players[1]);
+            DisplayTable();
+            ErrorMessage.Text = "Карта повернута до руки";
+        }
+
+        private void ShowUndoButton()
+        {
+            UndoButton.Visibility = Visibility.Visible;
+            Task.Delay(5000).ContinueWith(t => Dispatcher.Invoke(() =>
+            {
+                UndoButton.Visibility = Visibility.Hidden;
+            }));
         }
     }
 }

@@ -28,9 +28,7 @@ namespace DurakGame.Models
         private readonly IBotStrategy _attackStrategy;
         private readonly IBotStrategy _defenseStrategy;
 
-        public BotPlayer(string name,
-                         IBotStrategy attackStrategy,
-                         IBotStrategy defenseStrategy) :base(name)
+        public BotPlayer(string name, IBotStrategy attackStrategy, IBotStrategy defenseStrategy) : base(name)
         {
             _attackStrategy = attackStrategy;
             _defenseStrategy = defenseStrategy;

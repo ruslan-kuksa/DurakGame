@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using DurakGame.Memento;
 
 namespace DurakGame.Models
 {
@@ -122,5 +123,24 @@ namespace DurakGame.Models
             }
             return null;
         }
+
+        public GameMemento SaveState()
+        {
+            return new GameMemento(
+                new List<Card>(Players[0].Hand),
+                new List<Card>(Table.AttackCards),
+                new List<Card>(Table.DefenseCards),
+                ActivePlayer
+            );
+        }
+
+        public void RestoreState(GameMemento memento)
+        {
+            Players[0].SetHand(new List<Card>(memento.PlayerHand));
+            Table.SetAttackCards(new List<Card>(memento.TableAttackCards));
+            Table.SetDefenseCards(new List<Card>(memento.TableDefenseCards));
+            ActivePlayer = memento.ActivePlayer;
+        }
     }
 }
+
