@@ -13,6 +13,13 @@ namespace DurakGame.Models
         public Deck Deck { get; private set; }
         public Card TrumpCard { get; private set; }
         public Table Table { get; private set; }
+        
+        public event Action GameChanged;
+
+        private void OnGameChanged()
+        {
+            GameChanged?.Invoke();
+        }
 
         public GameManager()
         {
@@ -38,6 +45,7 @@ namespace DurakGame.Models
                 TrumpCard = Deck.DrawCard();
             }
             ActivePlayer = FindLowestTrumpCard();
+            OnGameChanged();
         }
 
         public void DealCards()
@@ -62,6 +70,7 @@ namespace DurakGame.Models
                     }
                 }
             }
+            OnGameChanged();
         }
         public Player FindLowestTrumpCard()
         {
@@ -98,6 +107,7 @@ namespace DurakGame.Models
             Table.Clear();
             DealCards();
             SwitchActivePlayer();
+            OnGameChanged();
         }
         public void TakeCards(Player player, List<Card> cardsOnTable)
         {
@@ -140,6 +150,7 @@ namespace DurakGame.Models
             Table.SetAttackCards(new List<Card>(memento.TableAttackCards));
             Table.SetDefenseCards(new List<Card>(memento.TableDefenseCards));
             ActivePlayer = memento.ActivePlayer;
+            OnGameChanged();
         }
     }
 }
