@@ -8,14 +8,25 @@ namespace DurakGame.Models
 {
     public class Table
     {
-        public List<Card> AttackCards { get; private set; }
-        public List<Card> DefenseCards { get; private set; }
+        public List<Card> AttackCards { get; set; }
+        public List<Card> DefenseCards { get; set; }
 
         public Table()
         {
             AttackCards = new List<Card>();
             DefenseCards = new List<Card>();
         }
+
+        public void SetAttackCards(List<Card> attackCards)
+        {
+            AttackCards = attackCards;
+        }
+
+        public void SetDefenseCards(List<Card> defenseCards)
+        {
+            DefenseCards = defenseCards;
+        }
+
         public void AddAttackCard(Card card)
         {
             AttackCards.Add(card);
@@ -45,10 +56,6 @@ namespace DurakGame.Models
             }
 
             return ContainsCardWithRank(card.Rank);
-        }
-        public bool AllAttackCardsDefended()
-        {
-            return AttackCards.Count == DefenseCards.Count;
         }
     }
 }

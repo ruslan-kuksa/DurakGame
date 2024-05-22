@@ -12,8 +12,7 @@ namespace DurakGame.Models
         private readonly IHumanStrategy _attackStrategy;
         private readonly IHumanStrategy _defenseStrategy;
 
-        public HumanPlayer(string name, IHumanStrategy attackStrategy, IHumanStrategy defenseStrategy)
-            : base(name)
+        public HumanPlayer(string name, IHumanStrategy attackStrategy, IHumanStrategy defenseStrategy) : base(name)
         {
             _attackStrategy = attackStrategy;
             _defenseStrategy = defenseStrategy;

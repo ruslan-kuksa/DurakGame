@@ -17,6 +17,11 @@ namespace DurakGame.Models
             Hand = new List<Card>();
         }
 
+        public void SetHand(List<Card> hand)
+        {
+            Hand = hand;
+        }
+
         public void AddCardToHand(Card card)
         {
             Hand.Add(card);

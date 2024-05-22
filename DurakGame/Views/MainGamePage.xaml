@@ -16,6 +16,7 @@
         <Button x:Name="StartGameButton" Content="Почати гру" Width="200" Height="50" Click="StartGameButton_Click" Margin="860,5,860,5" Grid.Row="1"/>
         <Button Grid.Row="1" x:Name="TakeButton" Content="Взяти" Width="200" Height="50" Click="TakeButton_Click" IsEnabled="False" Margin="1259,5,461,5"/>
         <Button Grid.Row="1" x:Name="BeatButton" Content="Бито" Width="200" Height="50" Click="BeatButton_Click" IsEnabled="False" Margin="1594,5,126,5"/>
+        <Button Grid.Row="1" x:Name="UndoButton" Content="Undo" Width="200" Height="50" Click="UndoButton_Click" Visibility="Hidden" Margin="428,5,1292,5"/>
         <StackPanel Grid.Row="0" x:Name="PlayerHandPanel" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" />
         <StackPanel Grid.Row="0" x:Name="OpponentHandPanel" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top"/>
         <Image x:Name="TrumpCardImage" Source="/Resources/card_back.png" Width="125" Height="182" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="104,0,0,0" RenderTransformOrigin="0.5,0.5" >
