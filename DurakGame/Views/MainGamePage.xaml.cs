@@ -43,8 +43,15 @@ namespace DurakGame
                 AddCardToDeck(i);
             }
             Game = new GameManager();
+            Game.GameChanged += OnGameStateChanged;
         }
-
+        private void OnGameStateChanged()
+        {
+            DisplayPlayerHand(Game.Players[0]);
+            DisplayOpponentHand(Game.Players[1]);
+            UpdateDeckCardCount();
+            DisplayTable();
+        }
         private void StartGameButton_Click(object sender, RoutedEventArgs e)
         {
             Game.AddPlayer(new HumanPlayer("Player", new HumanAttackStrategy(), new HumanDefenseStrategy()));
@@ -68,6 +75,8 @@ namespace DurakGame
                 FirstPlayerLabel.Content = "Немає гравців з козирними картами";
             }
             ((Button)sender).IsEnabled = false;
+
+            GameStateTextBlock.Text = "Гра розпочалася";
         }
 
         private void UpdateDeckCardCount()
@@ -224,6 +233,7 @@ namespace DurakGame
             {
                 BotPlay();
             }
+            GameStateTextBlock.Text = "Гравець взяв карти зі столу";
         }
 
         private void BeatButton_Click(object sender, RoutedEventArgs e)
@@ -238,6 +248,7 @@ namespace DurakGame
             {
                 BotPlay();
             }
+            GameStateTextBlock.Text = "Гравець закінчив свій хід";
         }
 
         private async void BotPlay()
@@ -366,7 +377,7 @@ namespace DurakGame
             DisplayPlayerHand(Game.Players[0]);
             DisplayOpponentHand(Game.Players[1]);
             DisplayTable();
-            ErrorMessage.Text = "Карта повернута до руки";
+            GameStateTextBlock.Text = "Карта повернута до руки";
         }
 
         private void ShowUndoButton()
