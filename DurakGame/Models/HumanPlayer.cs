@@ -23,11 +23,11 @@ namespace DurakGame.Models
             bool isAttacking = table.DefenseCards.Count == table.AttackCards.Count;
             if (isAttacking)
             {
-                return _attackStrategy.PlayCard(this, card, table, trumpCard, out errorMessage);
+                return _attackStrategy.PlayCardStrategy(this, card, table, trumpCard, out errorMessage);
             }
             else
             {
-                return _defenseStrategy.PlayCard(this, card, table, trumpCard, out errorMessage);
+                return _defenseStrategy.PlayCardStrategy(this, card, table, trumpCard, out errorMessage);
             }
         }
     }

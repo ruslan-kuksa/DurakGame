@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DurakGame.Strategy
+namespace DurakGame.Validation
 {
-    public interface IBotStrategy
+    public interface IValidationStrategy
     {
-        BotAction SelectCardStrategy(Player player, Table table, Card trumpCard);
+        void Validate(Player player, Card card, Table table, Card trumpCard);
     }
 }

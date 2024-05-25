@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace DurakGame.Validation
 {
-    public class ValidationException : Exception
+    public class GameValidationException : Exception
     {
-        public ValidationException(string message) : base(message)
+        public GameValidationException(string message) : base(message)
         {
         }
     }

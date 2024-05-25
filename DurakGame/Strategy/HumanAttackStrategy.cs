@@ -1,6 +1,8 @@
 ﻿using DurakGame.Models;
+using DurakGame.Validation;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,18 +11,29 @@ namespace DurakGame.Strategy
 {
     public class HumanAttackStrategy : IHumanStrategy
     {
-        public bool PlayCard(Player player, Card card, Table table, Card trumpCard, out string errorMessage)
+        private readonly BaseValidator _validator;
+
+        public HumanAttackStrategy(BaseValidator validator)
         {
-            errorMessage = string.Empty;
-            if (!table.CanAddAttackCard(card))
+            _validator = validator;
+        }
+
+        public bool PlayCardStrategy(Player player, Card card, Table table, Card trumpCard, out string errorMessage)
+        {
+            try
             {
-                errorMessage = "Цю карту не можливо підкинути";
+                _validator.SetValidationStrategy(new AttackCardValidation());
+                _validator.Validate(player, card, table, trumpCard);
+                player.RemoveCardFromHand(card);
+                table.AddAttackCard(card);
+                errorMessage = string.Empty;
+                return true;
+            }
+            catch (GameValidationException ex)
+            {
+                errorMessage = ex.Message;
                 return false;
             }
-
-            player.RemoveCardFromHand(card);
-            table.AddAttackCard(card);
-            return true;
         }
     }
 }
