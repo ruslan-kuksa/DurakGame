@@ -9,7 +9,7 @@ namespace DurakGame.Strategy
 {
     public class BotAttackStrategy : IBotStrategy
     {
-        public BotAction SelectCard(Player bot, Table table, Card trumpCard)
+        public BotAction SelectCardStrategy(Player bot, Table table, Card trumpCard)
         {
             Card chosenCard = null;
 

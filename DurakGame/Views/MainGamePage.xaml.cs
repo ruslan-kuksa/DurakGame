@@ -1,10 +1,12 @@
 ﻿using DurakGame.Memento;
 using DurakGame.Models;
 using DurakGame.Strategy;
+using DurakGame.Validation;
 using DurakGame.Views;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -54,8 +56,16 @@ namespace DurakGame
         }
         private void StartGameButton_Click(object sender, RoutedEventArgs e)
         {
-            Game.AddPlayer(new HumanPlayer("Player", new HumanAttackStrategy(), new HumanDefenseStrategy()));
+            BaseValidator attackValidator = new BaseValidator();
+            BaseValidator defenseValidator = new BaseValidator();
+
+            HumanAttackStrategy humanAttackStrategy = new HumanAttackStrategy(attackValidator);
+            HumanDefenseStrategy humanDefenseStrategy = new HumanDefenseStrategy(defenseValidator);
+
+            Game.AddPlayer(new HumanPlayer("Player", humanAttackStrategy, humanDefenseStrategy));
             Game.AddPlayer(new BotPlayer("Bot", new BotAttackStrategy(), new BotDefenseStrategy()));
+
+
             Game.StartGame();
             UpdateTrumpCardImage();
             DisplayPlayerHand(Game.Players[0]);

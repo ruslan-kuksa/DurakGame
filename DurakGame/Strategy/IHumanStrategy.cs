@@ -9,6 +9,6 @@ namespace DurakGame.Strategy
 {
     public interface IHumanStrategy
     {
-        bool PlayCard(Player player, Card card, Table table, Card trumpCard, out string errorMessage);
+        bool PlayCardStrategy(Player player, Card card, Table table, Card trumpCard, out string errorMessage);
     }
 }
