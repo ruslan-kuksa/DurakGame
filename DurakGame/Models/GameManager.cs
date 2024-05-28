@@ -22,11 +22,6 @@ namespace DurakGame.Models
 
         public event Action GameChanged;
 
-        private void OnGameChanged()
-        {
-            GameChanged?.Invoke();
-        }
-
         public GameManager()
         {
             Players = new List<Player>();
@@ -43,6 +38,10 @@ namespace DurakGame.Models
             }
             hintUsageCount++;
             return hintHandler.Handle(ActivePlayer, Table, TrumpCard);
+        }
+        private void OnGameChanged()
+        {
+            GameChanged?.Invoke();
         }
         public void AddPlayer(Player player)
         {

@@ -13,26 +13,38 @@ namespace DurakGame.Models
         public Deck()
         {
             cards = new List<Card>();
+            InitializeDeck();
+            Shuffle();
+        }
+
+        public void InitializeDeck()
+        {
             foreach (Suit suit in Enum.GetValues(typeof(Suit)))
             {
                 foreach (Rank rank in Enum.GetValues(typeof(Rank)))
                 {
-                    cards.Add(new Card (suit, rank ));
+                    cards.Add(new Card(suit, rank));
                 }
             }
-            Shuffle();
         }
+
         public void Shuffle()
         {
             Random random = new Random();
             for (int i = 0; i < cards.Count; i++)
             {
                 int j = random.Next(cards.Count);
-                Card temp = cards[i];
-                cards[i] = cards[j];
-                cards[j] = temp;
+                SwapCards(i, j);
             }
         }
+
+        public void SwapCards(int i, int j)
+        {
+            Card temp = cards[i];
+            cards[i] = cards[j];
+            cards[j] = temp;
+        }
+
         public Card DrawCard()
         {
             if (cards.Count == 0) 
@@ -45,9 +57,7 @@ namespace DurakGame.Models
             cards.RemoveAt(0);
             return card;
         }
-        public int Count
-        {
-            get { return cards.Count; }
-        }
+
+        public int Count => cards.Count;
     }
 }
