@@ -29,7 +29,6 @@ namespace DurakGame.Models
             Deck = new Deck();
             Table = new Table();
             InitializeHintHandler();
-            InitializeHintHandler();
         }
         public void OnGameChanged() => GameChanged?.Invoke();
 
@@ -108,7 +107,7 @@ namespace DurakGame.Models
         }
         public Player FindLowestTrumpCard()
         {
-            Player startingPlayer = null;
+            Player? startingPlayer = null;
             int lowestTrumpValue = int.MaxValue;
 
             foreach (Player player in Players)
@@ -157,7 +156,7 @@ namespace DurakGame.Models
             SwitchActivePlayer();
         }
 
-        public Player CheckWinner()
+        public Player? CheckWinner()
         {
             if (Deck.Count == 0)
             {
