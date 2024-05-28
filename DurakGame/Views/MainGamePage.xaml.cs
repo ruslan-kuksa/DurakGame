@@ -1,4 +1,5 @@
 ﻿using DurakGame.Memento;
+using DurakGame.Messages;
 using DurakGame.Models;
 using DurakGame.Strategy;
 using DurakGame.Validation;
@@ -65,7 +66,6 @@ namespace DurakGame
             Game.AddPlayer(new HumanPlayer("Player", humanAttackStrategy, humanDefenseStrategy));
             Game.AddPlayer(new BotPlayer("Bot", new BotAttackStrategy(), new BotDefenseStrategy()));
 
-
             Game.StartGame();
             UpdateTrumpCardImage();
             DisplayPlayerHand(Game.Players[0]);
@@ -74,7 +74,7 @@ namespace DurakGame
             Player firstPlayer = Game.FindLowestTrumpCard();
             if (firstPlayer != null)
             {
-                FirstPlayerLabel.Content = $"{firstPlayer.Name} ходить першим";
+                FirstPlayerLabel.Content = string.Format(GameNotification.FirstPlayerMessage, firstPlayer.Name);
                 if (firstPlayer is BotPlayer)
                 {
                     BotPlay();
@@ -82,11 +82,11 @@ namespace DurakGame
             }
             else
             {
-                FirstPlayerLabel.Content = "Немає гравців з козирними картами";
+                FirstPlayerLabel.Content = GameNotification.NoTrumpCardsMessage;
             }
             ((Button)sender).IsEnabled = false;
 
-            GameStateTextBlock.Text = "Гра розпочалася";
+            GameStateTextBlock.Text = GameNotification.GameStartedMessage;
         }
 
         private void UpdateDeckCardCount()
@@ -186,7 +186,7 @@ namespace DurakGame
             }
             else
             {
-                ErrorMessage.Text = "Зараз хід бота, зачекайте своєї черги";
+                ErrorMessage.Text = GameNotification.BotTurnMessage;
             }
         }
 
@@ -243,7 +243,7 @@ namespace DurakGame
             {
                 BotPlay();
             }
-            GameStateTextBlock.Text = "Гравець взяв карти зі столу";
+            GameStateTextBlock.Text = GameNotification.PlayerTookCardsMessage;
         }
 
         private void BeatButton_Click(object sender, RoutedEventArgs e)
@@ -258,7 +258,7 @@ namespace DurakGame
             {
                 BotPlay();
             }
-            GameStateTextBlock.Text = "Гравець закінчив свій хід";
+            GameStateTextBlock.Text = GameNotification.PlayerEndedTurnMessage;
         }
 
         private async void BotPlay()
@@ -387,16 +387,21 @@ namespace DurakGame
             DisplayPlayerHand(Game.Players[0]);
             DisplayOpponentHand(Game.Players[1]);
             DisplayTable();
-            GameStateTextBlock.Text = "Карта повернута до руки";
+            GameStateTextBlock.Text = GameNotification.CardReturnedMessage;
         }
 
         private void ShowUndoButton()
         {
             UndoButton.Visibility = Visibility.Visible;
-            Task.Delay(5000).ContinueWith(t => Dispatcher.Invoke(() =>
+            Task.Delay(2000).ContinueWith(t => Dispatcher.Invoke(() =>
             {
                 UndoButton.Visibility = Visibility.Hidden;
             }));
+        }
+        private void HintButton_Click(object sender, RoutedEventArgs e)
+        {
+            string hint = Game.GetHint();
+            MessageBox.Show(hint, "Підсказка");
         }
     }
 }
