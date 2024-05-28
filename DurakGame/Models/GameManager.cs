@@ -3,17 +3,23 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 using DurakGame.Memento;
+using DurakGame.Hints;
+using DurakGame.Messages;
 
 namespace DurakGame.Models
 {
     public class GameManager
     {
+        private int hintUsageCount = 0;
+        private const int maxHintUsage = 2;
         public List<Player> Players { get; private set; }
         public Player ActivePlayer { get; private set; }
         public Deck Deck { get; private set; }
         public Card TrumpCard { get; private set; }
         public Table Table { get; private set; }
-        
+
+        private IHintHandler hintHandler;
+
         public event Action GameChanged;
 
         private void OnGameChanged()
@@ -26,6 +32,17 @@ namespace DurakGame.Models
             Players = new List<Player>();
             Deck = new Deck();
             Table = new Table();
+            hintHandler = new AttackHintHandler();
+            hintHandler.SetNext(new DefenseHintHandler());
+        }
+        public string GetHint()
+        {
+            if (hintUsageCount >= maxHintUsage)
+            {
+                return GameNotification.HintUsageExceededMessage;
+            }
+            hintUsageCount++;
+            return hintHandler.Handle(ActivePlayer, Table, TrumpCard);
         }
         public void AddPlayer(Player player)
         {
