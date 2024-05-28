@@ -12,6 +12,7 @@ namespace DurakGame.Models
     {
         private int hintUsageCount = 0;
         private const int maxHintUsage = 2;
+        private const int іnitialHandSize = 6;
         public List<Player> Players { get; private set; }
         public Player ActivePlayer { get; private set; }
         public Deck Deck { get; private set; }
@@ -27,9 +28,19 @@ namespace DurakGame.Models
             Players = new List<Player>();
             Deck = new Deck();
             Table = new Table();
+            InitializeHintHandler();
+            InitializeHintHandler();
+        }
+        public void OnGameChanged() => GameChanged?.Invoke();
+
+        public void AddPlayer(Player player) => Players.Add(player);
+
+        public void InitializeHintHandler()
+        {
             hintHandler = new AttackHintHandler();
             hintHandler.SetNext(new DefenseHintHandler());
         }
+
         public string GetHint()
         {
             if (hintUsageCount >= maxHintUsage)
@@ -39,45 +50,53 @@ namespace DurakGame.Models
             hintUsageCount++;
             return hintHandler.Handle(ActivePlayer, Table, TrumpCard);
         }
-        private void OnGameChanged()
-        {
-            GameChanged?.Invoke();
-        }
-        public void AddPlayer(Player player)
-        {
-            Players.Add(player);
-        }
+
         public void StartGame()
+        {
+            DealInitialCards();
+            SetTrumpCard();
+            ActivePlayer = FindLowestTrumpCard();
+            OnGameChanged();
+        }
+
+        public void DealInitialCards()
         {
             foreach (Player player in Players)
             {
-                for (int i = 0; i < 6; i++)
+                for (int i = 0; i < іnitialHandSize; i++)
                 {
                     player.AddCardToHand(Deck.DrawCard());
                 }
             }
+        }
+
+        public void SetTrumpCard()
+        {
             if (Deck.Count > 0)
             {
                 TrumpCard = Deck.DrawCard();
             }
-            ActivePlayer = FindLowestTrumpCard();
-            OnGameChanged();
         }
 
         public void DealCards()
         {
             foreach (Player player in Players)
             {
-                while (player.Hand.Count < 6 && Deck.Count > 1) 
+                while (player.Hand.Count < іnitialHandSize && Deck.Count > 1)
                 {
                     player.AddCardToHand(Deck.DrawCard());
                 }
             }
+            AssignLastTrumpCard();
+            OnGameChanged();
+        }
+        public void AssignLastTrumpCard()
+        {
             if (Deck.Count == 1)
             {
                 foreach (Player player in Players)
                 {
-                    if (player.Hand.Count < 6)
+                    if (player.Hand.Count < іnitialHandSize)
                     {
                         player.AddCardToHand(TrumpCard);
                         Deck.DrawCard();
@@ -86,7 +105,6 @@ namespace DurakGame.Models
                     }
                 }
             }
-            OnGameChanged();
         }
         public Player FindLowestTrumpCard()
         {
@@ -107,17 +125,19 @@ namespace DurakGame.Models
             }
             return startingPlayer ?? Players[0];
         }
+
         public void SwitchActivePlayer()
         {
             int activePlayerIndex = Players.IndexOf(ActivePlayer);
             int nextPlayerIndex = (activePlayerIndex + 1) % Players.Count;
             ActivePlayer = Players[nextPlayerIndex];
-
         }
+
         public void NextTurn()
         {
             SwitchActivePlayer();
         }
+
         public void EndTurn()
         {
             Table.Clear();
@@ -125,6 +145,7 @@ namespace DurakGame.Models
             SwitchActivePlayer();
             OnGameChanged();
         }
+
         public void TakeCards(Player player, List<Card> cardsOnTable)
         {
             foreach (Card card in cardsOnTable)
@@ -135,6 +156,7 @@ namespace DurakGame.Models
             DealCards();
             SwitchActivePlayer();
         }
+
         public Player CheckWinner()
         {
             if (Deck.Count == 0)
