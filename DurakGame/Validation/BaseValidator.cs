@@ -10,7 +10,7 @@ namespace DurakGame.Validation
 {
     public class BaseValidator
     {
-        private IValidationStrategy _strategy;
+        private IValidationStrategy? _strategy;
 
         public void SetValidationStrategy(IValidationStrategy strategy)
         {

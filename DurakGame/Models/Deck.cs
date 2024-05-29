@@ -45,7 +45,7 @@ namespace DurakGame.Models
             cards[j] = temp;
         }
 
-        public Card DrawCard()
+        public Card? DrawCard()
         {
             if (cards.Count == 0) 
                 return null;
