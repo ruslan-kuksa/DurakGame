@@ -16,5 +16,10 @@ namespace DurakGame.Constants
         public const int CardWidth = 125;
         public const int CardHeight = 182;
         public const int ActionDelay = 2000;
+        public const double CardTopOffset = -50;
+        public const double CardLeftMultiplier = 135;
+        public const double CardLeftOffset = -350;
+        public const double DeckCardOffset = 0.1;
+        public const double DeckCardLeftOffset = 0.5;
     }
 }

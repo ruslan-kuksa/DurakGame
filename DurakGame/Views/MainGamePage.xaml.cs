@@ -25,6 +25,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml.Linq;
+using static System.Collections.Specialized.BitVector32;
 
 namespace DurakGame
 {
@@ -108,10 +109,7 @@ namespace DurakGame
             if (firstPlayer != null)
             {
                 FirstPlayerLabel.Content = string.Format(GameNotification.FirstPlayerMessage, firstPlayer.Name);
-                if (firstPlayer is BotPlayer)
-                {
-                    BotPlay();
-                }
+                ActivePlayerBot();
             }
             else
             {
@@ -181,32 +179,9 @@ namespace DurakGame
 
         private void CardControl_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (Game.ActivePlayer is HumanPlayer && sender is CardControl cardControl)
+            if (Game.ActivePlayer is HumanPlayer player && sender is CardControl cardControl)
             {
-                Card card = cardControl.Card;
-
-                if (Game.Players.Count > 0 && Game.Players[0] is HumanPlayer player && Game.Players[1] is BotPlayer bot)
-                {
-                    Caretaker.Save(Game.SaveState());
-                    if (player.PlayCard(card, Game.Table, Game.TrumpCard, out string errorMessage))
-                    {
-                        AddCardToTable(card, Game.Table.DefenseCards.Contains(card));
-                        DisplayPlayerHand();
-                        DisplayOpponentHand();
-                        ErrorMessage.Text = "";
-                        ShowUndoButton();
-                        Game.NextTurn();
-                        CheckAndDisplayWinner();
-                        if (Game.ActivePlayer is BotPlayer)
-                        {
-                            BotPlay();
-                        }
-                    }
-                    else
-                    {
-                        ErrorMessage.Text = errorMessage;
-                    }
-                }
+                HandleHumanPlayerCardClick(player, cardControl.Card);
             }
             else
             {
@@ -214,19 +189,51 @@ namespace DurakGame
             }
         }
 
+        private void HandleHumanPlayerCardClick(HumanPlayer player, Card card)
+        {
+            Caretaker.Save(Game.SaveState());
+
+            if (player.PlayCard(card, Game.Table, Game.TrumpCard, out string errorMessage))
+            {
+                ProcessCardPlay(card);
+            }
+            else
+            {
+                ErrorMessage.Text = errorMessage;
+            }
+        }
+        private void ActivePlayerBot()
+        {
+            if (Game.ActivePlayer is BotPlayer)
+            {
+                BotPlay();
+            }
+        }
+        private void ProcessCardPlay(Card card)
+        {
+            AddCardToTable(card, Game.Table.DefenseCards.Contains(card));
+            DisplayPlayerHand();
+            DisplayOpponentHand();
+            ErrorMessage.Text = string.Empty;
+            ShowUndoButton();
+            Game.NextTurn();
+            CheckAndDisplayWinner();
+            ActivePlayerBot();
+        }
+
         private void AddCardToTable(Card card, bool isDefending)
         {
             CardControl cardControl = new CardControl
             {
                 Card = card,
-                Width = 125,
-                Height = 182,
-                Margin = new Thickness(2)
+                Width = GameConstants.CardWidth,
+                Height = GameConstants.CardHeight,
+                Margin = new Thickness(GameConstants.DefaultCardMargin)
             };
 
             int position = isDefending ? Game.Table.DefenseCards.Count - 1 : Game.Table.AttackCards.Count - 1;
-            Canvas.SetLeft(cardControl, 135 * (position + 1) - 350);
-            Canvas.SetTop(cardControl, isDefending ? 0 : -50);
+            Canvas.SetLeft(cardControl, GameConstants.CardLeftMultiplier * (position + 1) + GameConstants.CardLeftOffset);
+            Canvas.SetTop(cardControl, isDefending ? 0 : GameConstants.CardTopOffset);
 
             TablePanel.Children.Add(cardControl);
         }
@@ -260,10 +267,7 @@ namespace DurakGame
             Game.TakeCards(player, cardsOnTable);
             UpdateUI();
             Game.DealCards();
-            if (Game.ActivePlayer is BotPlayer)
-            {
-                BotPlay();
-            }
+            ActivePlayerBot();
             GameStateTextBlock.Text = GameNotification.PlayerTookCardsMessage;
         }
 
@@ -272,91 +276,105 @@ namespace DurakGame
             Game.EndTurn();
             UpdateUI();
             Game.DealCards();
-            if (Game.ActivePlayer is BotPlayer)
-            {
-                BotPlay();
-            }
+            ActivePlayerBot();
             GameStateTextBlock.Text = GameNotification.PlayerEndedTurnMessage;
         }
 
         private async void BotPlay()
         {
-            await Task.Delay(2000);
-            if (Game.ActivePlayer is BotPlayer bot)
+            await Task.Delay(GameConstants.ActionDelay);
+
+            if (!(Game.ActivePlayer is BotPlayer bot))
             {
-                BotAction? action = bot.SelectCardToPlay(Game.Table, Game.TrumpCard);
-
-                if (action.HasValue)
-                {
-                    if (action.Value.IsPassing)
-                    {
-                        Game.Table.Clear();
-                        Game.EndTurn();
-                        DisplayPlayerHand();
-                        DisplayOpponentHand();
-                        DisplayTable();
-                        UpdateDeckCardCount();
-                        Game.DealCards();
-                        if (Game.ActivePlayer is BotPlayer)
-                        {
-                            BotPlay();
-                        }
-                        return;
-                    }
-
-                    Card cardToPlay = action.Value.Card;
-
-                    if (cardToPlay != null)
-                    {
-                        bot.RemoveCardFromHand(cardToPlay);
-
-                        if (action.Value.IsDefending)
-                        {
-                            BeatButton.Visibility = Visibility.Visible;
-                            BeatButton.IsEnabled = true;
-                            TakeButton.Visibility = Visibility.Hidden;
-                            Game.Table.AddDefenseCard(cardToPlay);
-                        }
-                        else
-                        {
-                            BeatButton.Visibility = Visibility.Hidden;
-                            TakeButton.Visibility = Visibility.Visible;
-                            TakeButton.IsEnabled = true;
-                            Game.Table.AddAttackCard(cardToPlay);
-                        }
-
-                        AddCardToTable(cardToPlay, action.Value.IsDefending);
-                        DisplayPlayerHand();
-                        DisplayOpponentHand();
-                    }
-                    else
-                    {
-                        List<Card> cardsOnTable = Game.Table.AttackCards.Concat(Game.Table.DefenseCards).ToList();
-                        Game.TakeCards(bot, cardsOnTable);
-                        DisplayPlayerHand();
-                        DisplayOpponentHand();
-                        DisplayTable();
-                        UpdateDeckCardCount();
-                        Game.DealCards();
-                        return;
-                    }
-                    Game.NextTurn();
-                    CheckAndDisplayWinner();
-                }
+                return;
             }
+
+            BotAction? action = bot.SelectCardToPlay(Game.Table, Game.TrumpCard);
+            if (!action.HasValue)
+            {
+                TakeBotCards(bot);
+                return;
+            }
+
+            if (action.Value.IsPassing)
+            {
+                HandleBotPassing();
+                return;
+            }
+
+            HandleBotCardPlayOrTake(bot, action.Value);
+            Game.NextTurn();
+            CheckAndDisplayWinner();
+        }
+
+        private void HandleBotPassing()
+        {
+            Game.Table.Clear();
+            Game.EndTurn();
+            UpdateUI();
+            Game.DealCards();
+            ActivePlayerBot();
+        }
+
+        private void HandleBotCardPlayOrTake(BotPlayer bot, BotAction action)
+        {
+            if (action.Card != null)
+            {
+                PlayBotCard(bot, action.Card, action.IsDefending);
+            }
+            else
+            {
+                TakeBotCards(bot);
+            }
+        }
+
+        private void PlayBotCard(BotPlayer bot, Card cardToPlay, bool isDefending)
+        {
+            bot.RemoveCardFromHand(cardToPlay);
+
+            if (isDefending)
+            {
+                EnableButton(BeatButton, TakeButton, true);
+                Game.Table.AddDefenseCard(cardToPlay);
+            }
+            else
+            {
+                EnableButton(TakeButton, BeatButton, true);
+                Game.Table.AddAttackCard(cardToPlay);
+            }
+
+            AddCardToTable(cardToPlay, isDefending);
+            DisplayPlayerHand();
+            DisplayOpponentHand();
+        }
+
+        private void TakeBotCards(BotPlayer bot)
+        {
+            List<Card> cardsOnTable = Game.Table.AttackCards.Concat(Game.Table.DefenseCards).ToList();
+            Game.TakeCards(bot, cardsOnTable);
+            UpdateUI();
+            Game.EndTurn();
+            Game.DealCards();
+        }
+
+        private void EnableButton(Button toEnable, Button toDisable, bool isEnabled)
+        {
+            toEnable.Visibility = Visibility.Visible;
+            toEnable.IsEnabled = isEnabled;
+            toDisable.Visibility = Visibility.Hidden;
         }
 
         private void AddCardToDeck(int i)
         {
-            var cardImage = new Image
+            Image cardImage = new Image
             {
                 Source = new BitmapImage(new Uri("pack://application:,,,/Resources/card_back.png")),
-                Width = 125,
-                Height = 182,
+                Width = GameConstants.CardWidth,
+                Height = GameConstants.CardHeight,
             };
             DeckImage.Children.Add(cardImage);
-            Canvas.SetTop(cardImage, i * 0.1);
-            Canvas.SetLeft(cardImage, 5 + i * 0.5);
+            Canvas.SetTop(cardImage, i * GameConstants.DeckCardOffset);
+            Canvas.SetLeft(cardImage, 5 + i * GameConstants.DeckCardLeftOffset);
         }
 
         private void CheckAndDisplayWinner()
@@ -380,22 +398,22 @@ namespace DurakGame
 
         private void ResetGame()
         {
+            ClearGameUI();
+            InitializeDeck();
+            InitializeGameManager();
+            StartGameButton.IsEnabled = true;
+            SetDeckVisibility(GameConstants.MaxDeckCount);
+        }
+
+        private void ClearGameUI()
+        {
             PlayerHandPanel.Children.Clear();
             OpponentHandPanel.Children.Clear();
             TablePanel.Children.Clear();
             DeckImage.Children.Clear();
-            ErrorMessage.Text = "";
-            FirstPlayerLabel.Content = "";
+            ErrorMessage.Text = string.Empty;
+            FirstPlayerLabel.Content = string.Empty;
             DeckCounter.Content = "0";
-            Game = new GameManager();
-            for (int i = 0; i < 36; i++)
-            {
-                AddCardToDeck(i);
-            }
-            StartGameButton.IsEnabled = true;
-            DeckImage.Visibility = Visibility.Visible;
-            TrumpCardImage.Visibility = Visibility.Visible;
-            DeckCounter.Visibility = Visibility.Visible;
         }
 
         private void UndoButton_Click(object sender, RoutedEventArgs e)
