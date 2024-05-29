@@ -4,6 +4,7 @@ using DurakGame.Models;
 using DurakGame.Strategy;
 using DurakGame.Validation;
 using DurakGame.Views;
+using DurakGame.Constants;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -76,8 +77,8 @@ namespace DurakGame
 
         private void UpdateUI()
         {
-            DisplayPlayerHand(Game.Players[0]);
-            DisplayOpponentHand(Game.Players[1]);
+            DisplayPlayerHand();
+            DisplayOpponentHand();
             UpdateDeckCardCount();
             DisplayTable();
         }
@@ -137,50 +138,45 @@ namespace DurakGame
         }
         private double CalculateCardMargin(int cardCount)
         {
-            if (cardCount >= 30)
-                return -100;
-            if (cardCount >= 24)
-                return -75;
-            if (cardCount >= 12)
-                return -50;
-            return 2;
+            if (cardCount >= 30) return GameConstants.LargeCardMargin;
+            if (cardCount >= 24) return GameConstants.MediumCardMargin;
+            if (cardCount >= 12) return GameConstants.SmallCardMargin;
+            return GameConstants.DefaultCardMargin;
         }
-        private void DisplayOpponentHand(Player opponent)
+        private void DisplayHand(Player player, Panel handPanel, bool isPlayerHand)
         {
-            OpponentHandPanel.Children.Clear();
-            double CardMargin = CalculateCardMargin(opponent.Hand.Count);
-            foreach (Card card in opponent.Hand)
-            {
-                EnemyCardControl enemyCardControl = new EnemyCardControl
-                {
-                    Card = card,
-                    Width = 125,
-                    Height = 182,
-                    Margin = new Thickness(CardMargin, 0, 0, 0)
-                };
-
-                OpponentHandPanel.Children.Add(enemyCardControl);
-            }
-        }
-
-        private void DisplayPlayerHand(Player player)
-        {
-            PlayerHandPanel.Children.Clear();
-            double CardMargin = CalculateCardMargin(player.Hand.Count);
+            handPanel.Children.Clear();
+            double cardMargin = CalculateCardMargin(player.Hand.Count);
 
             foreach (Card card in player.Hand)
             {
-                CardControl cardControl = new CardControl
-                {
-                    Card = card,
-                    Width = 125,
-                    Height = 182,
-                    Margin = new Thickness(CardMargin, 0, 0, 0)
-                };
+                UserControl cardControl = isPlayerHand ? new CardControl() : new EnemyCardControl();
+                cardControl.Width = GameConstants.CardWidth;
+                cardControl.Height = GameConstants.CardHeight;
+                cardControl.Margin = new Thickness(cardMargin, 0, 0, 0);
 
-                cardControl.MouseLeftButtonDown += CardControl_MouseLeftButtonDown;
-                PlayerHandPanel.Children.Add(cardControl);
+                if (cardControl is CardControl playerCardControl)
+                {
+                    playerCardControl.Card = card;
+                    playerCardControl.MouseLeftButtonDown += CardControl_MouseLeftButtonDown;
+                }
+                else if (cardControl is EnemyCardControl enemyCardControl)
+                {
+                    enemyCardControl.Card = card;
+                }
+
+                handPanel.Children.Add(cardControl);
             }
+        }
+
+        private void DisplayOpponentHand()
+        {
+            DisplayHand(Game.Players[1], OpponentHandPanel, false);
+        }
+
+        private void DisplayPlayerHand()
+        {
+            DisplayHand(Game.Players[0], PlayerHandPanel, true);
         }
 
         private void CardControl_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -195,8 +191,8 @@ namespace DurakGame
                     if (player.PlayCard(card, Game.Table, Game.TrumpCard, out string errorMessage))
                     {
                         AddCardToTable(card, Game.Table.DefenseCards.Contains(card));
-                        DisplayPlayerHand(player);
-                        DisplayOpponentHand(bot);
+                        DisplayPlayerHand();
+                        DisplayOpponentHand();
                         ErrorMessage.Text = "";
                         ShowUndoButton();
                         Game.NextTurn();
@@ -247,11 +243,11 @@ namespace DurakGame
         private void DisplayTable()
         {
             TablePanel.Children.Clear();
-            foreach (var card in Game.Table.AttackCards)
+            foreach (Card card in Game.Table.AttackCards)
             {
                 AddCardToTable(card, false);
             }
-            foreach (var card in Game.Table.DefenseCards)
+            foreach (Card card in Game.Table.DefenseCards)
             {
                 AddCardToTable(card, true);
             }
@@ -262,10 +258,7 @@ namespace DurakGame
             Player player = Game.Players[0];
             List<Card> cardsOnTable = Game.Table.AttackCards.Concat(Game.Table.DefenseCards).ToList();
             Game.TakeCards(player, cardsOnTable);
-            DisplayPlayerHand(Game.Players[0]);
-            DisplayOpponentHand(Game.Players[1]);
-            DisplayTable();
-            UpdateDeckCardCount();
+            UpdateUI();
             Game.DealCards();
             if (Game.ActivePlayer is BotPlayer)
             {
@@ -277,10 +270,7 @@ namespace DurakGame
         private void BeatButton_Click(object sender, RoutedEventArgs e)
         {
             Game.EndTurn();
-            DisplayPlayerHand(Game.Players[0]);
-            DisplayOpponentHand(Game.Players[1]);
-            DisplayTable();
-            UpdateDeckCardCount();
+            UpdateUI();
             Game.DealCards();
             if (Game.ActivePlayer is BotPlayer)
             {
@@ -302,8 +292,8 @@ namespace DurakGame
                     {
                         Game.Table.Clear();
                         Game.EndTurn();
-                        DisplayPlayerHand(Game.Players[0]);
-                        DisplayOpponentHand(Game.Players[1]);
+                        DisplayPlayerHand();
+                        DisplayOpponentHand();
                         DisplayTable();
                         UpdateDeckCardCount();
                         Game.DealCards();
@@ -336,15 +326,15 @@ namespace DurakGame
                         }
 
                         AddCardToTable(cardToPlay, action.Value.IsDefending);
-                        DisplayPlayerHand(Game.Players[0]);
-                        DisplayOpponentHand(Game.Players[1]);
+                        DisplayPlayerHand();
+                        DisplayOpponentHand();
                     }
                     else
                     {
                         List<Card> cardsOnTable = Game.Table.AttackCards.Concat(Game.Table.DefenseCards).ToList();
                         Game.TakeCards(bot, cardsOnTable);
-                        DisplayPlayerHand(Game.Players[0]);
-                        DisplayOpponentHand(Game.Players[1]);
+                        DisplayPlayerHand();
+                        DisplayOpponentHand();
                         DisplayTable();
                         UpdateDeckCardCount();
                         Game.DealCards();
@@ -412,8 +402,8 @@ namespace DurakGame
         {
             GameMemento memento = Caretaker.Undo();
             Game.RestoreState(memento);
-            DisplayPlayerHand(Game.Players[0]);
-            DisplayOpponentHand(Game.Players[1]);
+            DisplayPlayerHand();
+            DisplayOpponentHand();
             DisplayTable();
             GameStateTextBlock.Text = GameNotification.CardReturnedMessage;
         }
