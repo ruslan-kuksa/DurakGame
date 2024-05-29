@@ -38,17 +38,43 @@ namespace DurakGame
         public MainGamePage()
         {
             InitializeComponent();
-            var newImageSource = new BitmapImage(new Uri(App.BackgroundImagePath.ToString(), UriKind.RelativeOrAbsolute));
-            var newImageBrush = new ImageBrush(newImageSource);
+            InitializeGame();
+        }
+
+        private void InitializeGame()
+        {
+            SetBackgroundImage();
+            InitializeDeck();
+            InitializeGameManager();
+        }
+
+        private void SetBackgroundImage()
+        {
+            BitmapImage newImageSource = new BitmapImage(new Uri(App.BackgroundImagePath.ToString(), UriKind.RelativeOrAbsolute));
+            ImageBrush newImageBrush = new ImageBrush(newImageSource);
             BackGrid.Background = newImageBrush;
+        }
+
+        private void InitializeDeck()
+        {
             for (int i = 0; i < 36; i++)
             {
                 AddCardToDeck(i);
             }
+        }
+
+        private void InitializeGameManager()
+        {
             Game = new GameManager();
             Game.GameChanged += OnGameStateChanged;
         }
+
         private void OnGameStateChanged()
+        {
+            UpdateUI();
+        }
+
+        private void UpdateUI()
         {
             DisplayPlayerHand(Game.Players[0]);
             DisplayOpponentHand(Game.Players[1]);
