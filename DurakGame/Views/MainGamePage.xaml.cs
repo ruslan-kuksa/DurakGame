@@ -83,20 +83,26 @@ namespace DurakGame
         }
         private void StartGameButton_Click(object sender, RoutedEventArgs e)
         {
+            InitializePlayers();
+            Game.StartGame();
+            UpdateTrumpCardImage();
+            UpdateUI();
+            DisplayFirstPlayer();
+            ((Button)sender).IsEnabled = false;
+            GameStateTextBlock.Text = GameNotification.GameStartedMessage;
+        }
+        private void InitializePlayers()
+        {
             BaseValidator attackValidator = new BaseValidator();
             BaseValidator defenseValidator = new BaseValidator();
-
             HumanAttackStrategy humanAttackStrategy = new HumanAttackStrategy(attackValidator);
             HumanDefenseStrategy humanDefenseStrategy = new HumanDefenseStrategy(defenseValidator);
 
             Game.AddPlayer(new HumanPlayer("Player", humanAttackStrategy, humanDefenseStrategy));
             Game.AddPlayer(new BotPlayer("Bot", new BotAttackStrategy(), new BotDefenseStrategy()));
-
-            Game.StartGame();
-            UpdateTrumpCardImage();
-            DisplayPlayerHand(Game.Players[0]);
-            DisplayOpponentHand(Game.Players[1]);
-            UpdateDeckCardCount();
+        }
+        private void DisplayFirstPlayer()
+        {
             Player firstPlayer = Game.FindLowestTrumpCard();
             if (firstPlayer != null)
             {
@@ -110,11 +116,7 @@ namespace DurakGame
             {
                 FirstPlayerLabel.Content = GameNotification.NoTrumpCardsMessage;
             }
-            ((Button)sender).IsEnabled = false;
-
-            GameStateTextBlock.Text = GameNotification.GameStartedMessage;
         }
-
         private void UpdateDeckCardCount()
         {
             int deckCount = Game.Deck.Count;
@@ -123,24 +125,30 @@ namespace DurakGame
                 deckCount++;
             }
             DeckCounter.Content = deckCount.ToString();
-            if (deckCount == 0)
-            {
-                DeckImage.Visibility = Visibility.Hidden;
-                TrumpCardImage.Visibility = Visibility.Hidden;
-                DeckCounter.Visibility = Visibility.Hidden;
-            }
+            SetDeckVisibility(deckCount);
         }
 
+        private void SetDeckVisibility(int deckCount)
+        {
+            var visibility = deckCount == 0 ? Visibility.Hidden : Visibility.Visible;
+            DeckImage.Visibility = visibility;
+            TrumpCardImage.Visibility = visibility;
+            DeckCounter.Visibility = visibility;
+        }
+        private double CalculateCardMargin(int cardCount)
+        {
+            if (cardCount >= 30)
+                return -100;
+            if (cardCount >= 24)
+                return -75;
+            if (cardCount >= 12)
+                return -50;
+            return 2;
+        }
         private void DisplayOpponentHand(Player opponent)
         {
             OpponentHandPanel.Children.Clear();
-            double CardMargin = 2;
-            if (opponent.Hand.Count >= 30)
-                CardMargin = -100;
-            else if (opponent.Hand.Count >= 24)
-                CardMargin = -75;
-            else if (opponent.Hand.Count >= 12)
-                CardMargin = -50;
+            double CardMargin = CalculateCardMargin(opponent.Hand.Count);
             foreach (Card card in opponent.Hand)
             {
                 EnemyCardControl enemyCardControl = new EnemyCardControl
@@ -158,13 +166,7 @@ namespace DurakGame
         private void DisplayPlayerHand(Player player)
         {
             PlayerHandPanel.Children.Clear();
-            double CardMargin = 2;
-            if (player.Hand.Count >= 30)
-                CardMargin = -100;
-            else if (player.Hand.Count >= 24)
-                CardMargin = -75;
-            else if (player.Hand.Count >= 12)
-                CardMargin = -50;
+            double CardMargin = CalculateCardMargin(player.Hand.Count);
 
             foreach (Card card in player.Hand)
             {
