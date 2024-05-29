@@ -10,7 +10,7 @@ namespace DurakGame.Hints
 {
     public abstract class HintHandler : IHintHandler
     {
-        private IHintHandler _nextHandler;
+        private IHintHandler? _nextHandler;
 
         public IHintHandler SetNext(IHintHandler handler)
         {
