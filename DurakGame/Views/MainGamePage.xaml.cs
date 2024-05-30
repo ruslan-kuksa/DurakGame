@@ -13,7 +13,7 @@ namespace DurakGame
     public partial class MainGamePage : Page
     {
         public GameManager Game;
-        public GameCaretaker Caretaker= new GameCaretaker();
+        public GameCaretaker Caretaker = new GameCaretaker();
         public UIBackgroundManager UIBackgroundManager;
         public UIDeckManager UIDeckManager;
         public UIPlayerManager UIPlayerManager;
