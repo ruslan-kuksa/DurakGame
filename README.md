@@ -320,9 +320,9 @@ The Chain of Responsibility Pattern handles hints, where multiple handlers proce
 
 Refactoring techniques employed:
 
-- **Extract Method**: Complex methods were broken down into smaller, more manageable methods. For example, the [`StartGame`](DurakGame/Managers/GameManager.cs#53) method in [`GameManager.cs`](DurakGame/Managers/GameManager.cs) was split into [`DealInitialCards`](DurakGame/Managers/GameManager.cs#61) and [`SetTrumpCard`](DurakGame/Managers/GameManager.cs#72).
+- **Extract Method**: Complex methods were broken down into smaller, more manageable methods. For example, the [`StartGame`](DurakGame/Models/GameManager.cs#L53) method in [`GameManager.cs`](DurakGame/Models/GameManager.cs) was split into [`DealInitialCards`](DurakGame/Models/GameManager.cs#L61) and [`SetTrumpCard`](DurakGame/Models/GameManager.cs#L72).
 - **Replace Magic Number with Symbolic Constant**: Magic numbers were replaced with constants defined in [`GameConstants.cs`](DurakGame/GameConstants/GameConstants.cs).
 - **Introduce Parameter Object**: Grouped related parameters into objects. For instance, in [`GameMemento.cs`](DurakGame/Memento/GameMemento.cs), parameters related to the game state were grouped.
 - **Replace Nested Conditional with Guard Clauses**: Special checks and edge cases were isolated into separate clauses. For example, [`UIBotManager.cs`](DurakGame/ViewHandler/UIBotManager.cs).
 - **Move Method/Field**: Methods were moved to the classes that use them the most, such as in [`UIBotManager.cs`](DurakGame/ViewHandler/UIBotManager.cs) and [`UIManager.cs`](DurakGame/ViewHandler/UIManager.cs).
-- **Consolidate Duplicate Conditional Fragments**: Duplicate conditional fragments were combined, as seen in the method [`SetDeckVisibility`](DurakGame/ViewHandler/UIDeckManager.cs#L39).
+- **Consolidate Duplicate Conditional Fragments**: Duplicate conditional fragments were combined, as seen in the method [`SetDeckVisibility`](DurakGame/ViewHandler/UIDeckManager.cs#L43).
