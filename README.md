@@ -1,3 +1,14 @@
+## Table of Contents
+
+- [Installation](#installation)
+- [Usage](#usage)
+- [Programming Principles](#programming-principles)
+- [Design Patterns](#design-patterns)
+  - [Strategy Pattern](#strategy-pattern)
+  - [Memento Pattern](#memento-pattern)
+  - [Chain of Responsibility Pattern](#chain-of-responsibility-pattern)
+  - [Observer Pattern](#observer-pattern)
+- [Refactoring Techniques](#refactoring-techniques)
 ## Installation
 
 To run the Durak game locally, follow these steps:
@@ -12,34 +23,30 @@ To run the Durak game locally, follow these steps:
 
 ## Usage
 
-After starting the application, you can start a new game by clicking the "Start Game" button. 
-The game will initialize with one human player and one bot player. The game determines the player(player or bot) who play cards first
-You can play cards by clicking on them, and the bot will defense or take cards automatically. 
-Bot select low rank card and non-trump card for his round to attack player.
-Player can defense from bot cards or take the cards from the table
+After starting the application, you can start a new game by clicking the "Start Game" button. The game will initialize with one human player and one bot player. The game determines which player (human or bot) plays cards first. You can play cards by clicking on them, and the bot will defend or take cards automatically. The bot selects low-rank cards and non-trump cards for its turn to attack the player. The player can either defend from the bot's cards or take the cards from the table.
 
 ## Programming Principles
 
 The following programming principles were adhered to during the development of this project:
 
-- **DRY (Don't Repeat Yourself)**: This principle was followed by extracting common code into reusable methods and classes. For example, card-related logic is encapsulated within the `Card.cs` class to avoid duplication.
+- **DRY (Don't Repeat Yourself)**: This principle was followed by extracting common code into reusable methods and classes. For example, card-related logic is encapsulated within the [`Card.cs`](DurakGame/Models/Card.cs) class to avoid duplication.
 
 - **KISS (Keep It Simple, Stupid)**: The design and implementation of the game were kept as simple as possible, avoiding unnecessary complexity.
 
 - **SOLID**:
-   - **Single Responsibility Principle (SRP)**: Each class in the project has a single responsibility. For example,`Card.cs` represents a single card.
-   - **Open/Closed Principle (OCP)**: The game is designed to be easily extendable. For example, new strategies for bots can be added without modifying existing code.
-   - **Liskov Substitution Principle (LSP)**: Objects of a superclass should be replaceable with objects of a subclass without affecting the functionality. For example, `HumanPlayer` and `BotPlayer` can be used interchangeably as `Player`. Same with `HintHandler`
-   - **Interface Segregation Principle (ISP)**: Interfaces are designed to be client-specific rather than general-purpose. For example, `IHintHandler.cs` and `IBotStrategy.cs` are specific to their respective functionalities.
-   - **Dependency Inversion Principle (DIP)**: High-level modules depend on abstractions rather than concrete classes. This is seen in the use of interfaces like `IHintHandler.cs` and `IBotStrategy.cs`.
+  - **Single Responsibility Principle (SRP)**: Each class in the project has a single responsibility. For example, [`Card.cs`](DurakGame/Models/Card.cs) represents a single card.
+  - **Open/Closed Principle (OCP)**: The game is designed to be easily extendable. For example, new strategies for bots can be added without modifying existing code.
+  - **Liskov Substitution Principle (LSP)**: Objects of a superclass should be replaceable with objects of a subclass without affecting the functionality. For example, [`HumanPlayer.cs`](DurakGame/Models/HumanPlayer.cs) and [`BotPlayer.cs`](DurakGame/Models/BotPlayer.cs) can be used interchangeably as `Player`, and [`HintHandler.cs`](DurakGame/Hints/HintHandler.cs) can be extended without altering existing functionality.
+  - **Interface Segregation Principle (ISP)**: Interfaces are designed to be client-specific rather than general-purpose. For example, [`IHintHandler.cs`](DurakGame/Hints/IHintHandler.cs) and [`IBotStrategy.cs`](DurakGame/Strategy/IBotStrategy.cs) are specific to their respective functionalities.
+  - **Dependency Inversion Principle (DIP)**: High-level modules depend on abstractions rather than concrete classes. This is seen in the use of interfaces like [`IHintHandler.cs`](DurakGame/Hints/IHintHandler.cs) and [`IBotStrategy.cs`](DurakGame/Strategy/IBotStrategy.cs).
 
 - **YAGNI (You Aren't Gonna Need It)**: Features were not added unless they were necessary. For example, only essential game features were implemented initially, and additional features were considered based on necessity.
 
-- **Composition Over Inheritance**: Composition was preferred over inheritance to achieve code reuse. For example, `BotPlayer` class uses composition to include strategies for playing cards.
+- **Composition Over Inheritance**: Composition was preferred over inheritance to achieve code reuse. For example, the [`BotPlayer.cs`](DurakGame/Models/BotPlayer.cs) class uses composition to include strategies for playing cards.
 
-- **Program to Interfaces, not Implementations**: The game logic relies on interfaces rather than concrete implementations. For example, the `GameManager` class interacts with `IHintHandler` and `IBotStrategy` interfaces.
+- **Program to Interfaces, not Implementations**: The game logic relies on interfaces rather than concrete implementations. For example, the [`GameManager.cs`](DurakGame/Models/GameManager.cs) class interacts with [`IHintHandler`](DurakGame/Hints/IHintHandler.cs) and [`IBotStrategy`](DurakGame/Strategy/IBotStrategy.cs) interfaces.
 
-- **Fail Fast**: The game logic is designed to fail early if there are errors. For example, validation checks are performed at the beginning of methods to catch errors early, such as in `Validation` folder.
+- **Fail Fast**: The game logic is designed to fail early if there are errors. Validaction place in [`Validation`](DurakGame/Validation) folder.
 ## Design Patterns
 
 ### Strategy Pattern
@@ -47,7 +54,7 @@ The following programming principles were adhered to during the development of t
 The Strategy Pattern is used to define different algorithms for attacking and defending. This allows for flexibility and extensibility in how players (both human and bot) play their turns.
 
 #### Code Example
-- `IHumanStrategy.cs`
+- [`IHumanStrategy.cs`](DurakGame/Strategy/IHumanStrategy.cs)
   ```csharp
     public interface IHumanStrategy
     {
@@ -55,7 +62,7 @@ The Strategy Pattern is used to define different algorithms for attacking and de
     }
   ```
   
-- `HumanDefenseStrategy.cs`
+- [`HumanDefenseStrategy.cs`](DurakGame/Strategy/HumanDefenseStrategy.cs)
   ```csharp
     public class HumanDefenseStrategy : IHumanStrategy
     {
@@ -85,7 +92,7 @@ The Strategy Pattern is used to define different algorithms for attacking and de
         }
     }
   ```
-- `HumanAttackStrategy.cs`
+- [`HumanAttackStrategy.cs`](DurakGame/Strategy/HumanAttackStrategy.cs)
   ```csharp
     public class HumanAttackStrategy : IHumanStrategy
     {
@@ -122,7 +129,7 @@ The Memento Pattern implements undo functionality, allowing the game to be resto
 
 #### Code
 
-- `GameCaretaker.cs`
+- [`GameCaretaker.cs`](DurakGame/Memento/GameCaretaker.cs)
   ```csharp
     public class GameCaretaker
     {
@@ -143,7 +150,7 @@ The Memento Pattern implements undo functionality, allowing the game to be resto
         }
     }
   ```
-- `GameMemento.cs`
+- [`GameMemento.cs`](DurakGame/Memento/GameMemento.cs)
   ```csharp
     public class GameMemento
     {
@@ -161,7 +168,7 @@ The Memento Pattern implements undo functionality, allowing the game to be resto
         }
     }
   ```
-- `SaveState.cs`
+- [`SaveState`](DurakGame/Models/GameManager.cs#L174)
   ```csharp
         public GameMemento SaveState()
         {
@@ -173,7 +180,7 @@ The Memento Pattern implements undo functionality, allowing the game to be resto
             );
         }
   ```
-- `RestoreState.cs`
+- [`RestoreState`](DurakGame/Models/GameManager.cs#L184)
   ```csharp
         public void RestoreState(GameMemento memento)
         {
@@ -191,7 +198,7 @@ When the game state changes, all subscribed observers are notified and can updat
 
 #### Code
 
-- `GameManager.cs`
+- [`GameManager.cs`](DurakGame/Models/GameManager.cs)
   ```csharp
     public class GameManager
     {
@@ -200,7 +207,7 @@ When the game state changes, all subscribed observers are notified and can updat
         public void OnGameChanged() => GameChanged?.Invoke();
     }
   ```
-- `MainGamePage.cs`
+- [`MainGamePage.cs`](DurakGame/Views/MainGamePage.cs)
   ```csharp
     public partial class MainGamePage : Page
     {
@@ -222,7 +229,7 @@ The Chain of Responsibility Pattern handles hints, where multiple handlers proce
 
 #### Code
 
-- `IHintHandler.cs`
+- [`IHintHandler.cs`](DurakGame/Hints/IHintHandler.cs)
   ```csharp
     public interface IHintHandler
     {
@@ -231,7 +238,7 @@ The Chain of Responsibility Pattern handles hints, where multiple handlers proce
         string Handle(Player player, Table table, Card trumpCard);
     }
   ```
-- `HintHandler.cs`
+- [`HintHandler.cs`](DurakGame/Hints/HintHandler.cs)
   ```csharp
     public abstract class HintHandler : IHintHandler
     {
@@ -256,7 +263,7 @@ The Chain of Responsibility Pattern handles hints, where multiple handlers proce
         }
     }
   ```
-- `AttackHintHandler.cs`
+- [`AttackHintHandler.cs`](DurakGame/Hints/AttackHintHandler.cs)
   ```csharp
     public class AttackHintHandler : HintHandler
     {
@@ -280,7 +287,7 @@ The Chain of Responsibility Pattern handles hints, where multiple handlers proce
         }
     }
   ```
-- `DefenseHintHandler.cs`
+- [`DefenseHintHandler.cs`](DurakGame/Hints/DefenseHintHandler.cs)
   ```csharp
     public class DefenseHintHandler : HintHandler
     {
@@ -313,9 +320,9 @@ The Chain of Responsibility Pattern handles hints, where multiple handlers proce
 
 Refactoring techniques employed:
 
-- **Extract Method**: Complex methods are broken into smaller methods, e.g., `StartGame` in `GameManager.cs` is split into `DealInitialCards` and `SetTrumpCard`.
-- **Replace Magic Number with Symbolic Constant**: Magic numbers are replaced with constants in `GameConstants.cs`.
-- **Introduce Parameter Object**: Related parameters are grouped into objects, e.g., game state parameters in `GameMemento.cs`.
-- **Replace Nested Conditional with Guard Clauses**: Isolate all special checks and edge cases into separate clauses, e.g.,`UIBotManager.cs`
-- **Move Method/Field**: Create a new method in the class that uses the method the most, then move code from the old method to there, e.g.,`UIBotManager.cs`, `UIHandler.cs` etc.
-- **Consolidate Duplicate Conditional Fragments**: Combining duplicate conditional fragments, e.g., method `SetDeckVisibility`
+- **Extract Method**: Complex methods were broken down into smaller, more manageable methods. For example, the `StartGame` method in [`GameManager.cs`](DurakGame/Managers/GameManager.cs) was split into `DealInitialCards`, `SetTrumpCard`, and `FindLowestTrumpCard`.
+- **Replace Magic Number with Symbolic Constant**: Magic numbers were replaced with constants defined in [`GameConstants.cs`](DurakGame/GameConstants/GameConstants.cs).
+- **Introduce Parameter Object**: Grouped related parameters into objects. For instance, in [`GameMemento.cs`](DurakGame/Memento/GameMemento.cs), parameters related to the game state were grouped.
+- **Replace Nested Conditional with Guard Clauses**: Special checks and edge cases were isolated into separate clauses. For example, [`UIBotManager.cs`](DurakGame/ViewHandler/UIBotManager.cs).
+- **Move Method/Field**: Methods were moved to the classes that use them the most, such as in [`UIBotManager.cs`](DurakGame/ViewHandler/UIBotManager.cs) and [`UIHandler.cs`](DurakGame/ViewHandler/UIHandler.cs).
+- **Consolidate Duplicate Conditional Fragments**: Duplicate conditional fragments were combined, as seen in the method [`SetDeckVisibility`](DurakGame/ViewHandler/UIDeckManager.cs#L39).
