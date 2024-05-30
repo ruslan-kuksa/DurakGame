@@ -324,5 +324,5 @@ Refactoring techniques employed:
 - **Replace Magic Number with Symbolic Constant**: Magic numbers were replaced with constants defined in [`GameConstants.cs`](DurakGame/GameConstants/GameConstants.cs).
 - **Introduce Parameter Object**: Grouped related parameters into objects. For instance, in [`GameMemento.cs`](DurakGame/Memento/GameMemento.cs), parameters related to the game state were grouped.
 - **Replace Nested Conditional with Guard Clauses**: Special checks and edge cases were isolated into separate clauses. For example, [`UIBotManager.cs`](DurakGame/ViewHandler/UIBotManager.cs).
-- **Move Method/Field**: Methods were moved to the classes that use them the most, such as in [`UIBotManager.cs`](DurakGame/ViewHandler/UIBotManager.cs) and [`UIHandler.cs`](DurakGame/ViewHandler/UIHandler.cs).
+- **Move Method/Field**: Methods were moved to the classes that use them the most, such as in [`UIBotManager.cs`](DurakGame/ViewHandler/UIBotManager.cs) and [`UIManager.cs`](DurakGame/ViewHandler/UIManager.cs).
 - **Consolidate Duplicate Conditional Fragments**: Duplicate conditional fragments were combined, as seen in the method [`SetDeckVisibility`](DurakGame/ViewHandler/UIDeckManager.cs#L39).
