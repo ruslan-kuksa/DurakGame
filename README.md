@@ -1,5 +1,6 @@
 ## Table of Contents
 
+- [Screenshots](#screenshots)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Programming Principles](#programming-principles)
@@ -9,6 +10,21 @@
   - [Chain of Responsibility Pattern](#chain-of-responsibility-pattern)
   - [Observer Pattern](#observer-pattern)
 - [Refactoring Techniques](#refactoring-techniques)
+## Screenshots
+#### **1. Основний екран**
+![Main Screen](screenshots/img.png)
+
+#### **2. Гра почалась**
+![Game Started](screenshots/img2.png)
+
+#### **3. Хід гравця**
+![Player Turn](screenshots/img3.png)
+
+#### **4. Хід бота**
+![Bot Turn](screenshots/img4.png)
+
+#### **5. Перемога**
+![Victory Screen](screenshots/img5.png)
 ## Installation
 
 To run the Durak game locally, follow these steps:
@@ -29,22 +45,22 @@ After starting the application, you can start a new game by clicking the "Start 
 
 The following programming principles were adhered to during the development of this project:
 
-- **DRY (Don't Repeat Yourself)**: This principle was followed by extracting common code into reusable methods and classes. For example, card-related logic is encapsulated within the [`Card.cs`](DurakGame/Models/Card.cs) class to avoid duplication.
+- **DRY (Don't Repeat Yourself)**: This principle was followed by extracting common code into reusable methods and classes.
 
 - **KISS (Keep It Simple, Stupid)**: The design and implementation of the game were kept as simple as possible, avoiding unnecessary complexity.
 
 - **SOLID**:
-  - **Single Responsibility Principle (SRP)**: Each class in the project has a single responsibility. For example, [`Card.cs`](DurakGame/Models/Card.cs) represents a single card.
+  - **Single Responsibility Principle (SRP)**: Each class in the project has a single responsibility. For example, [`Deck.cs`](DurakGame/Models/Deck.cs) represents the deck of the game.
   - **Open/Closed Principle (OCP)**: The game is designed to be easily extendable. For example, new strategies for bots can be added without modifying existing code.
   - **Liskov Substitution Principle (LSP)**: Objects of a superclass should be replaceable with objects of a subclass without affecting the functionality. For example, [`HumanPlayer.cs`](DurakGame/Models/HumanPlayer.cs) and [`BotPlayer.cs`](DurakGame/Models/BotPlayer.cs) can be used interchangeably as [`Player.cs`](DurakGame/Models/Player.cs), and [`HintHandler.cs`](DurakGame/Hints/HintHandler.cs) can be extended without altering existing functionality.
-  - **Interface Segregation Principle (ISP)**: Interfaces are designed to be client-specific rather than general-purpose. For example, [`IHintHandler.cs`](DurakGame/Hints/IHintHandler.cs) and [`IBotStrategy.cs`](DurakGame/Strategy/IBotStrategy.cs) are specific to their respective functionalities.
-  - **Dependency Inversion Principle (DIP)**: High-level modules depend on abstractions rather than concrete classes. This is seen in the use of interfaces like [`IHintHandler.cs`](DurakGame/Hints/IHintHandler.cs) and [`IBotStrategy.cs`](DurakGame/Strategy/IBotStrategy.cs).
+  - **Interface Segregation Principle (ISP)**: Interfaces are designed to be client-specific rather than general-purpose. For example, [`IHintHandler.cs`](DurakGame/Hints/IHintHandler.cs), [`IBotStrategy.cs`](DurakGame/Strategy/IBotStrategy.cs) and [`IHumanStrategy`](DurakGame/Strategy/IHumanStrategy.cs) are specific to their respective functionalities.
+  - **Dependency Inversion Principle (DIP)**: High-level modules depend on abstractions rather than concrete classes. This is seen in the use of interfaces like [`IHintHandler.cs`](DurakGame/Hints/IHintHandler.cs), [`IBotStrategy.cs`](DurakGame/Strategy/IBotStrategy.cs) and [`IHumanStrategy`](DurakGame/Strategy/IHumanStrategy.cs).
 
 - **YAGNI (You Aren't Gonna Need It)**: Features were not added unless they were necessary. For example, only essential game features were implemented initially, and additional features were considered based on necessity.
 
 - **Composition Over Inheritance**: Composition was preferred over inheritance to achieve code reuse. For example, the [`BotPlayer.cs`](DurakGame/Models/BotPlayer.cs) class uses composition to include strategies for playing cards.
 
-- **Program to Interfaces, not Implementations**: The game logic relies on interfaces rather than concrete implementations. For example, the [`GameManager.cs`](DurakGame/Models/GameManager.cs) class interacts with [`IHintHandler`](DurakGame/Hints/IHintHandler.cs) and [`IBotStrategy`](DurakGame/Strategy/IBotStrategy.cs) interfaces.
+- **Program to Interfaces, not Implementations**: The game logic relies on interfaces rather than concrete implementations. For example, using [`IHintHandler`](DurakGame/Hints/IHintHandler.cs) and [`IBotStrategy`](DurakGame/Strategy/IBotStrategy.cs) interfaces.
 
 - **Fail Fast**: The game logic is designed to fail early if there are errors. Validaction place in [`Validation`](DurakGame/Validation) folder.
 ## Design Patterns
