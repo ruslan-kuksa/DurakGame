@@ -36,7 +36,7 @@ The following programming principles were adhered to during the development of t
 - **SOLID**:
   - **Single Responsibility Principle (SRP)**: Each class in the project has a single responsibility. For example, [`Card.cs`](DurakGame/Models/Card.cs) represents a single card.
   - **Open/Closed Principle (OCP)**: The game is designed to be easily extendable. For example, new strategies for bots can be added without modifying existing code.
-  - **Liskov Substitution Principle (LSP)**: Objects of a superclass should be replaceable with objects of a subclass without affecting the functionality. For example, [`HumanPlayer.cs`](DurakGame/Models/HumanPlayer.cs) and [`BotPlayer.cs`](DurakGame/Models/BotPlayer.cs) can be used interchangeably as `Player`, and [`HintHandler.cs`](DurakGame/Hints/HintHandler.cs) can be extended without altering existing functionality.
+  - **Liskov Substitution Principle (LSP)**: Objects of a superclass should be replaceable with objects of a subclass without affecting the functionality. For example, [`HumanPlayer.cs`](DurakGame/Models/HumanPlayer.cs) and [`BotPlayer.cs`](DurakGame/Models/BotPlayer.cs) can be used interchangeably as [`Player.cs`](DurakGame/Models/Player.cs), and [`HintHandler.cs`](DurakGame/Hints/HintHandler.cs) can be extended without altering existing functionality.
   - **Interface Segregation Principle (ISP)**: Interfaces are designed to be client-specific rather than general-purpose. For example, [`IHintHandler.cs`](DurakGame/Hints/IHintHandler.cs) and [`IBotStrategy.cs`](DurakGame/Strategy/IBotStrategy.cs) are specific to their respective functionalities.
   - **Dependency Inversion Principle (DIP)**: High-level modules depend on abstractions rather than concrete classes. This is seen in the use of interfaces like [`IHintHandler.cs`](DurakGame/Hints/IHintHandler.cs) and [`IBotStrategy.cs`](DurakGame/Strategy/IBotStrategy.cs).
 
@@ -320,7 +320,7 @@ The Chain of Responsibility Pattern handles hints, where multiple handlers proce
 
 Refactoring techniques employed:
 
-- **Extract Method**: Complex methods were broken down into smaller, more manageable methods. For example, the `StartGame` method in [`GameManager.cs`](DurakGame/Managers/GameManager.cs) was split into `DealInitialCards`, `SetTrumpCard`, and `FindLowestTrumpCard`.
+- **Extract Method**: Complex methods were broken down into smaller, more manageable methods. For example, the [`StartGame`](DurakGame/Managers/GameManager.cs#53) method in [`GameManager.cs`](DurakGame/Managers/GameManager.cs) was split into [`DealInitialCards`](DurakGame/Managers/GameManager.cs#61) and [`SetTrumpCard`](DurakGame/Managers/GameManager.cs#72).
 - **Replace Magic Number with Symbolic Constant**: Magic numbers were replaced with constants defined in [`GameConstants.cs`](DurakGame/GameConstants/GameConstants.cs).
 - **Introduce Parameter Object**: Grouped related parameters into objects. For instance, in [`GameMemento.cs`](DurakGame/Memento/GameMemento.cs), parameters related to the game state were grouped.
 - **Replace Nested Conditional with Guard Clauses**: Special checks and edge cases were isolated into separate clauses. For example, [`UIBotManager.cs`](DurakGame/ViewHandler/UIBotManager.cs).
