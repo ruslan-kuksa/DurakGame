@@ -5,6 +5,48 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="TheFoolGame" Height="1080" Width="1920">
+    <Page.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="DarkRed"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="BorderBrush" Value="White"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <Border Background="{TemplateBinding Background}" 
+                                    BorderBrush="{TemplateBinding BorderBrush}" 
+                                    BorderThickness="2" 
+                                    CornerRadius="5">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <Border.Effect>
+                                    <DropShadowEffect Color="White" BlurRadius="10" ShadowDepth="2"/>
+                                </Border.Effect>
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="Gray"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="DarkGray"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Storyboard x:Key="ButtonHoverAnimation">
+            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                             To="1.1" Duration="0:0:0.2" AutoReverse="True"/>
+            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                             To="1.1" Duration="0:0:0.2" AutoReverse="True"/>
+        </Storyboard>
+    </Page.Resources>
     <Grid x:Name="BackGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -13,14 +55,66 @@
         <Grid.Background>
             <ImageBrush Stretch="UniformToFill" ImageSource="/Resources/green_background.png"/>
         </Grid.Background>
-        <Button x:Name="StartGameButton" Content="Почати гру" Width="200" Height="50" Click="StartGameButton_Click" Margin="860,5,860,5" Grid.Row="1"/>
-        <Button Grid.Row="1" x:Name="TakeButton" Content="Взяти" Width="200" Height="50" Click="TakeButton_Click" IsEnabled="False" Margin="1259,5,461,5"/>
-        <Button Grid.Row="1" x:Name="BeatButton" Content="Бито" Width="200" Height="50" Click="BeatButton_Click" IsEnabled="False" Margin="1594,5,126,5"/>
-        <Button Grid.Row="1" x:Name="UndoButton" Content="Undo" Width="200" Height="50" Click="UndoButton_Click" Visibility="Hidden" Margin="428,5,1292,5"/>
-        <Button x:Name="HintButton" Content="Отримати підсказку" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,10,10,0" Click="HintButton_Click" Height="34" Width="131"/>
+
+        <Button x:Name="StartGameButton" Content="Почати гру" Width="200" Height="50" Click="StartGameButton_Click" Margin="860,5,860,5" Grid.Row="1">
+            <Button.RenderTransform>
+                <ScaleTransform/>
+            </Button.RenderTransform>
+            <Button.Triggers>
+                <EventTrigger RoutedEvent="MouseEnter">
+                    <BeginStoryboard Storyboard="{StaticResource ButtonHoverAnimation}"/>
+                </EventTrigger>
+            </Button.Triggers>
+        </Button>
+
+        <Button Grid.Row="1" x:Name="TakeButton" Content="Взяти" Width="200" Height="50" Click="TakeButton_Click" IsEnabled="False" Margin="1259,5,461,5">
+            <Button.RenderTransform>
+                <ScaleTransform/>
+            </Button.RenderTransform>
+            <Button.Triggers>
+                <EventTrigger RoutedEvent="MouseEnter">
+                    <BeginStoryboard Storyboard="{StaticResource ButtonHoverAnimation}"/>
+                </EventTrigger>
+            </Button.Triggers>
+        </Button>
+
+        <Button Grid.Row="1" x:Name="BeatButton" Content="Бито" Width="200" Height="50" Click="BeatButton_Click" IsEnabled="False" Margin="1594,5,126,5">
+            <Button.RenderTransform>
+                <ScaleTransform/>
+            </Button.RenderTransform>
+            <Button.Triggers>
+                <EventTrigger RoutedEvent="MouseEnter">
+                    <BeginStoryboard Storyboard="{StaticResource ButtonHoverAnimation}"/>
+                </EventTrigger>
+            </Button.Triggers>
+        </Button>
+
+        <Button Grid.Row="1" x:Name="UndoButton" Content="Undo" Width="200" Height="50" Click="UndoButton_Click" Visibility="Hidden" Margin="428,5,1292,5">
+            <Button.RenderTransform>
+                <ScaleTransform/>
+            </Button.RenderTransform>
+            <Button.Triggers>
+                <EventTrigger RoutedEvent="MouseEnter">
+                    <BeginStoryboard Storyboard="{StaticResource ButtonHoverAnimation}"/>
+                </EventTrigger>
+            </Button.Triggers>
+        </Button>
+
+        <Button x:Name="HintButton" Content="Отримати підсказку" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,10,10,0" Click="HintButton_Click" Height="34" Width="131">
+            <Button.RenderTransform>
+                <ScaleTransform/>
+            </Button.RenderTransform>
+            <Button.Triggers>
+                <EventTrigger RoutedEvent="MouseEnter">
+                    <BeginStoryboard Storyboard="{StaticResource ButtonHoverAnimation}"/>
+                </EventTrigger>
+            </Button.Triggers>
+        </Button>
+
         <StackPanel Grid.Row="0" x:Name="PlayerHandPanel" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" />
         <StackPanel Grid.Row="0" x:Name="OpponentHandPanel" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-        <Image x:Name="TrumpCardImage" Source="/Resources/card_back.png" Width="125" Height="182" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="104,0,0,0" RenderTransformOrigin="0.5,0.5" >
+
+        <Image x:Name="TrumpCardImage" Source="/Resources/card_back.png" Width="125" Height="182" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="104,0,0,0" RenderTransformOrigin="0.5,0.5">
             <Image.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
@@ -30,8 +124,10 @@
                 </TransformGroup>
             </Image.RenderTransform>
         </Image>
+
         <Canvas x:Name="DeckImage" HorizontalAlignment="Left" Height="198" VerticalAlignment="Center" Width="138"/>
         <Canvas x:Name="TablePanel" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Height="Auto" />
+
         <Label x:Name="DeckCounter" Content="0" Margin="70,358,79,340" FontSize="14" FontWeight="Bold" Foreground="White"/>
         <Label x:Name="FirstPlayerLabel" Margin="20,20,1593,893" FontSize="16" FontWeight="Bold" Foreground="White"/>
         <TextBlock x:Name="ErrorMessage" Foreground="Red" HorizontalAlignment="Left" Margin="0,649,0,179" Width="327" FontSize="20" TextWrapping="Wrap"/>

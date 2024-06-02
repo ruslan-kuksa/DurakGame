@@ -5,27 +5,88 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:DurakGame.Views"
       Title="SettingsPage" Width="1920" Height="1080">
+    <Page.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="DarkRed"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="48"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="BorderBrush" Value="White"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <Border Background="{TemplateBinding Background}" 
+                                    BorderBrush="{TemplateBinding BorderBrush}" 
+                                    BorderThickness="2" 
+                                    CornerRadius="10">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <Border.Effect>
+                                    <DropShadowEffect Color="White" BlurRadius="10" ShadowDepth="2"/>
+                                </Border.Effect>
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="Gray"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="DarkGray"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Storyboard x:Key="ButtonHoverAnimation">
+            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                             To="1.1" Duration="0:0:0.2" AutoReverse="True"/>
+            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                             To="1.1" Duration="0:0:0.2" AutoReverse="True"/>
+        </Storyboard>
+    </Page.Resources>
 
     <Grid Height="1080">
         <Grid.Background>
             <ImageBrush Stretch="UniformToFill" ImageSource="/Resources/poker_red_background.jpg"/>
         </Grid.Background>
+
         <CheckBox x:Name="FullScreen" Content="Повноекранний режим" HorizontalAlignment="Left" Margin="520,218,0,0" VerticalAlignment="Top" FontSize="14" BorderThickness="1.5,1.5,1.5,1.5" Height="18" RenderTransformOrigin="0.642,0.363" Width="176" Background="White" Checked="FullScreen_Checked" Unchecked="FullScreen_Unchecked">
             <CheckBox.LayoutTransform>
                 <ScaleTransform ScaleX="5" ScaleY="5"/>
             </CheckBox.LayoutTransform>
         </CheckBox>
-        <Button x:Name="BackButton" Content="Назад у меню" HorizontalAlignment="Center" Margin="0,759,0,0" VerticalAlignment="Top" Height="90" Width="330" FontSize="48" Background="#FFC84D4D" Click="BackButton_Click"/>
+
+        <Button x:Name="BackButton" Content="Назад у меню" HorizontalAlignment="Center" Margin="0,759,0,0" VerticalAlignment="Top" Height="90" Width="350" Click="BackButton_Click">
+            <Button.RenderTransform>
+                <ScaleTransform/>
+            </Button.RenderTransform>
+            <Button.Triggers>
+                <EventTrigger RoutedEvent="MouseEnter">
+                    <BeginStoryboard Storyboard="{StaticResource ButtonHoverAnimation}"/>
+                </EventTrigger>
+            </Button.Triggers>
+        </Button>
+
         <Label Content="Фон у грі" HorizontalAlignment="Center" Margin="0,354,0,0" VerticalAlignment="Top" Height="90" Width="414" FontSize="48" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+
         <Border x:Name="RedDBorder" BorderThickness="0" BorderBrush="Aqua" Width="390" Height="222" Margin="72,455,1458,403" MouseLeftButtonDown="RedDBorder_MouseLeftButtonDown">
             <Image Height="216" Width="384" Stretch="UniformToFill" Source="/Resources/poker_red_background.jpg"/>
         </Border>
+
         <Border x:Name="BlackDBorder" BorderThickness="0" BorderBrush="Aqua" Width="390" Height="222" Margin="536,455,994,403" MouseLeftButtonDown="BlackDBorder_MouseLeftButtonDown">
             <Image Height="216" Width="384" Stretch="UniformToFill" Source="/Resources/poker_black_background.jpg"/>
         </Border>
+
         <Border x:Name="GreenDBorder" BorderThickness="0" BorderBrush="Aqua" Margin="996,455,534,403" Width="390" Height="222" MouseLeftButtonDown="GreenDBorder_MouseLeftButtonDown">
             <Image Height="216" Width="384" Stretch="UniformToFill" Source="/Resources/poker_green_background.jpg"/>
         </Border>
+
         <Border x:Name="GreenSBorder" BorderThickness="0" BorderBrush="Aqua" Width="390" Height="222" Margin="1458,455,72,403" MouseLeftButtonDown="GreenSBorder_MouseLeftButtonDown">
             <Image Height="216" Width="384" Stretch="UniformToFill" Source="/Resources/green_background.png"/>
         </Border>

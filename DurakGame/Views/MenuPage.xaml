@@ -6,13 +6,84 @@
       xmlns:local="clr-namespace:DurakGame.Views"
       Title="MenuPage" Width="1920" Height="1080">
 
+    <Page.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="DarkRed"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="48"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <Border Background="{TemplateBinding Background}" 
+                                    BorderBrush="{TemplateBinding BorderBrush}" 
+                                    BorderThickness="2" 
+                                    CornerRadius="10">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="Black"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#FF03DAC6"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <Storyboard x:Key="ButtonHoverAnimation">
+            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                             To="1.1" Duration="0:0:0.2" AutoReverse="True"/>
+            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                             To="1.1" Duration="0:0:0.2" AutoReverse="True"/>
+        </Storyboard>
+    </Page.Resources>
     <Grid>
         <Grid.Background>
             <ImageBrush Stretch="UniformToFill" TileMode="None" ImageSource="/Resources/menu_background.png"/>
         </Grid.Background>
-        <Button x:Name="StartGameButton" Content="Почати гру" HorizontalAlignment="Center" VerticalAlignment="Top" Height="90" Width="330" FontSize="48" Margin="0,698,0,0" Background="#FFC84D4D" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="StartGameButton_Click"/>
-        <Button x:Name="SettingsButton" Content="Налаштування" HorizontalAlignment="Center" Margin="0,820,0,0" VerticalAlignment="Top" Height="90" Width="330" Background="#FFC84D4D" FontSize="48" Click="SettingsButton_Click"/>
-        <Button x:Name="ExitButton" Content="Вихід" HorizontalAlignment="Center" Margin="0,946,0,0" VerticalAlignment="Top" Height="90" Width="330" Background="#FFC84D4D" FontSize="48" Click="ExitButton_Click"/>
 
+        <Button x:Name="StartGameButton" Content="Почати гру" HorizontalAlignment="Center" VerticalAlignment="Top" Height="90" Width="360" Margin="0,698,0,0" Click="StartGameButton_Click">
+            <Button.RenderTransform>
+                <ScaleTransform/>
+            </Button.RenderTransform>
+            <Button.Triggers>
+                <EventTrigger RoutedEvent="MouseEnter">
+                    <BeginStoryboard Storyboard="{StaticResource ButtonHoverAnimation}"/>
+                </EventTrigger>
+            </Button.Triggers>
+        </Button>
+
+        <Button x:Name="SettingsButton" Content="Налаштування" HorizontalAlignment="Center" VerticalAlignment="Top" Height="90" Width="370" Margin="0,820,0,0" Click="SettingsButton_Click">
+            <Button.RenderTransform>
+                <ScaleTransform/>
+            </Button.RenderTransform>
+            <Button.Triggers>
+                <EventTrigger RoutedEvent="MouseEnter">
+                    <BeginStoryboard Storyboard="{StaticResource ButtonHoverAnimation}"/>
+                </EventTrigger>
+            </Button.Triggers>
+        </Button>
+
+        <Button x:Name="ExitButton" Content="Вихід" HorizontalAlignment="Center" VerticalAlignment="Top" Height="90" Width="370" Margin="0,946,0,0" Click="ExitButton_Click">
+            <Button.RenderTransform>
+                <ScaleTransform/>
+            </Button.RenderTransform>
+            <Button.Triggers>
+                <EventTrigger RoutedEvent="MouseEnter">
+                    <BeginStoryboard Storyboard="{StaticResource ButtonHoverAnimation}"/>
+                </EventTrigger>
+            </Button.Triggers>
+        </Button>
     </Grid>
 </Page>
